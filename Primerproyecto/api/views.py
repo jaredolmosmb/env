@@ -127,7 +127,6 @@ def ProcesarOracion2(frasePrueba, indx, val):
 				indice_inicial = str(frasePrueba).lower().find(str(descripcion.term).lower())
 				indice_final = indice_inicial + len(descripcion.term)
 				descSeguncon.append([descripcion.term, conc[0], indice_inicial, indice_final, len(descripcion.term)])
-
 				"""
 				print ("indxconc", indxconc)
 				if indxconc == 0:
