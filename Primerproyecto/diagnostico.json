@@ -1,0 +1,9 @@
+{
+  "resourceType" : "DiagnosticReport",
+  "subject" : { "reference" : "Patient/P001" },
+  "identifier" : [{ 
+ 		"use" : "oficial",
+  		"value" : "D001"
+  		 }],
+  "conclusionCode" : "dolor de cabeza"
+}

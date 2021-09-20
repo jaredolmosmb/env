@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>index</title>
+</head>
+<body>
+<h1>Datos: {{data}}</h1>
+<h4>
+    {% for w in data %}
+     <br> {{ w }} {{w.pos_}} {{w.dep_}} {{w.head.text}}
+    {% endfor %}
+</h4>
+
+
+<h1> json de entrada</h1><div class="col-sm-3">
+	<h4>
+    {% for key, value in json1.items %}
+        
+        {% if key == "entry" %}
+        	{% for i in value %}
+        	<br>
+        		{% for key2, value2 in i.items %}
+
+        			{% if key2 != "fullUrl" %}
+        				{% for j, value3 in value2.items %}
+        					{{ j }} : {{ value3 }}<br>
+        				{% endfor %}
+        			{% else %}
+        			{{ key2 }} : {{ value2 }} <br>
+        			{% endif %}
+        			
+        			
+       			{% endfor %}
+        	{% endfor %}
+        {% else %}
+        {{ key }} : {{ value }} <br>
+        {% endif %}
+
+    {% endfor %}
+</h4>
+</div>
+</h2>
+
+
+<h1> json procesado</h1><div class="col-sm-3">
+	<h4>
+    {% for key, value in json2.items %}
+        
+        {% if key == "entry" %}
+        	{% for i in value %}
+        	<br>
+        		{% for key2, value2 in i.items %}
+
+        			{% if key2 != "fullUrl" %}
+        				{% for j, value3 in value2.items %}
+        					{{ j }} : {{ value3 }}<br>
+        				{% endfor %}
+        			{% else %}
+        			{{ key2 }} : {{ value2 }} <br>
+        			{% endif %}
+        			
+        			
+       			{% endfor %}
+        	{% endfor %}
+        {% else %}
+        {{ key }} : {{ value }} <br>
+        {% endif %}
+
+    {% endfor %}
+</h4>
+</div>
+</h2>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "resourceType" : "Medication",
+  "identifier" : [{ 
+        "use" : "oficial",
+        "value" : "M002"
+         }], 
+  "code" : "ácido fólico"
+}

@@ -1,0 +1,20 @@
+    {
+  	"resourceType": "Observation",
+  	"identifier": [{
+  		"use": "oficial",
+  		"value": "OB004"
+  	}],
+  	"status": "final",
+  	"category": "Signos Vitales",
+  	"code": "temperatura",
+  	"subject": {
+  		"reference": "Patient/P001"
+  	},
+  	"encounter": {
+  		"reference": "Encounter/E001"
+  	},
+  	"valueQuantity": {
+  		"value": 36.00,
+  		"unit": "°C"
+  	}
+  }

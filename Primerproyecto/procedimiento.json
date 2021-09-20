@@ -1,0 +1,18 @@
+{
+  "resourceType" : "Procedure",
+  "identifier" : [{ 
+      "use" : "oficial",
+      "value" : "PRO001"
+       }],
+  "subject" : { "reference" : "Patient/P001" },
+  "code" : "vendaje",
+  "note" : [{
+      "authorReference" : { "reference" : "Practitioner/PRA001" },
+      "time" : "2021",
+      "text" : "nota de vendaje de medico"
+   },{
+      "authorReference" : { "reference" : "Practitioner/PRA001" },
+      "time" : "2021",
+      "text" : "nota 2 de vendaje de medico"
+   }]
+} 
