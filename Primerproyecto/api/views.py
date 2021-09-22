@@ -50,6 +50,7 @@ def ProcesarOracion2(frasePrueba, indx, val):
 	arreglo = ['enfermedad', 'trastorno']
 	bd_tokens = TokensDiagnosticos.objects.raw("SELECT * FROM `api_tokensdiagnosticos` WHERE token IN %s", [tuple(filt_frasePrueba)])
 	print("len(bd_tokens)", len(bd_tokens))
+	print("type(bd_tokens)", type(bd_tokens))
 	for indx, i in enumerate(filt_frasePrueba):#por cada token en la frase
 		id_terminos_de_token.append([])
 		for j in bd_tokens:#por cada token en la bd
