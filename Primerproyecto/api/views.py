@@ -43,14 +43,14 @@ def ProcesarOracion2(frasePrueba, indx, val):
 	#print(tokens_palabras)
 	#print(len(tokens_palabras))
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
-	print("filt_frasePrueba", filt_frasePrueba)
+	#print("filt_frasePrueba", filt_frasePrueba)
 	#print(len(filt_frasePrueba))
 	id_terminos_de_token=[]
 	#bd_tokens = TokensDiagnosticos.objects.all()#jalo de mi bolsa de palabras todo slos tokens existentes
 	arreglo = ['enfermedad', 'trastorno']
 	bd_tokens = TokensDiagnosticos.objects.raw("SELECT * FROM `api_tokensdiagnosticos` WHERE token IN %s", [tuple(filt_frasePrueba)])
-	print("len(bd_tokens)", len(bd_tokens))
-	print("type(bd_tokens)", type(bd_tokens))
+	#print("len(bd_tokens)", len(bd_tokens))
+	#print("type(bd_tokens)", type(bd_tokens))
 	for indx, i in enumerate(filt_frasePrueba):#por cada token en la frase
 		id_terminos_de_token.append([])
 		for j in bd_tokens:#por cada token en la bd
@@ -193,11 +193,11 @@ def ProcesarOracion2(frasePrueba, indx, val):
 		for descripcion in descripciones:
 			if str(descripcion.term).lower() in str(frasePrueba).lower():
 				cont=cont+1
-				print ("indxconc", indxconc3)
+				#print ("indxconc", indxconc3)
 				if indxconc3 == 0:
 					frasePrueba2 = copy.deepcopy(frasePrueba)
 				indice_inicial = str(frasePrueba2).lower().find(str(descripcion.term).lower())
-				print("indice_inicial", indice_inicial)
+				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' ('+FSN.term+')' + frasePrueba2[(indice_final):]
@@ -205,20 +205,22 @@ def ProcesarOracion2(frasePrueba, indx, val):
 				#	aumento = aumento + len(FSN.term)+4
 				#else:
 				#	aumento=aumento + len(FSN.term)
-				print("frasePrueba2", frasePrueba2)
-				print("indice_final", indice_final)
+				#print("frasePrueba2", frasePrueba2)
+				#print("indice_final", indice_final)
+	print("conceptos3",conceptos3)
 
 
 	if len(conceptos3) >= 1:
 		for indexItem, item in enumerate(conceptos3):
+			print(indexItem)
 			if "extension" not in val['resource']:
 				val['resource'].update( {"extension": [{
-				"url" : "codeSNOMEDActivo1 ",
+				"url" : "codeSNOMEDActivo "+str(indx),
 				"text" : item[0]
 				}]} )
 			else:
 				val['resource']["extension"].append( {
-				"url" : "codeSNOMEDActivo1 ",
+				"url" : "codeSNOMEDActivo "+str(indx),
 				"text" : item[0]
 				} )
 	if frasePrueba2 == "":
