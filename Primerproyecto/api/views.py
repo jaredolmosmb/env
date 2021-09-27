@@ -1,24 +1,18 @@
-
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.template.loader import render_to_string 
 from django.shortcuts import render
-from Aplicacion1.models import ConceptS, DescriptionS, Synonyms, ConceptosNoEncontrados
+from Aplicacion1.models import ConceptS, DescriptionS, Synonyms, ConceptosNoEncontrados, LoincEspaña
 from django.db.models import Q
 from Aplicacion1.servicios import generarRequest, normalize, validateJSON
-#from .models import Paciente
-#from .forms import PacienteForm
 import json
 import copy
 from api.models import TokensDiagnosticos
 from Aplicacion1.servicios import generarRequest, normalize, validateJSON
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
-#from .models import Paciente
-#from .forms import PacienteForm
 import nltk
 import time
 import es_core_news_sm
