@@ -30,27 +30,28 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
 	stop_words = set(stopwords.words("spanish"))
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
-	print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
 	# ---------ELIMINAR STOPWORDS
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
-	print("--- %s seconds etapa 2 ---" % (time.time() - start_time))
-	# ---------GENERAR LISTA ANIDADA POR CADA TOKEN = [ID_DESCRIPCION, LARGO_PALABRAS, TOKEN]
+	#print("--- %s seconds etapa 2 ---" % (time.time() - start_time))
+	# ---------GENERAR LISTA ANIDADA POR CADA TOKEN = [ID_DESCRIPCION, LARGO_PALABRAS]
 	id_terminos_de_token=[]
 	bd_tokens = TokensDiagnosticos.objects.raw("SELECT * FROM `api_tokensdiagnosticos` WHERE token IN %s", [tuple(filt_frasePrueba)])
-	for indx, i in enumerate(filt_frasePrueba):#por cada token en la frase
+	arfil = numpy.asarray(filt_frasePrueba)
+	for indx, i in enumerate(arfil):#por cada token en la frase
 		id_terminos_de_token.append([])
 		for j in bd_tokens:#por cada token en la bd
-			if j.token == i and j.largo_palabras_termino < len(filt_frasePrueba):#si token de frase esta en token de la instancia de la bd
+			if j.token == i and j.largo_palabras_termino <= len(filt_frasePrueba):#si token de frase esta en token de la instancia de la bd
 				#id_terminos_de_token[indx].append([j.id_descripcion, j.largo_palabras_termino, j.token])#añado id de la descripcion que continee el token de la frase
 				id_terminos_de_token[indx].append([int(j.id_descripcion), j.largo_palabras_termino])#añado id de la descripcion que continee el token de la frase
 	max=0
-	print("--- %s seconds etapa 3 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 3 ---" % (time.time() - start_time))
 	# ---------ELIMINAR DESCRIPCIONES QUE TENGAN MAS PALABRAS QUE LA DE LA FRASE A PROCESAR
 	for term in id_terminos_de_token:
 		for index, tupla in enumerate(term):
 			if tupla[1]>len(id_terminos_de_token):
 				term.remove(term[index])
-	print("--- %s seconds etapa 4 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 4 ---" % (time.time() - start_time))
 	# ---------ORDENAR CADA LISTA ANIDADA DE CADA TOKEN DE LARGO DE PALABRAS EN DESCRIPCION DE MANERA DESCENDENTE
 	for term in id_terminos_de_token:
 		Sort(term)
@@ -58,35 +59,33 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 			if lon>max:
 				max=lon
 				idMax = desc
-	print("--- %s seconds etapa 5 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 5 ---" % (time.time() - start_time))
 	# ---------IDENTIFICACIÓN DE DESCRIPCIONES QUE CONTENGAN AL TOKEN CON LA MISMA LONGITUD QU ELA FRASE PROCESADA
 	termino_correcto=[]
-	#print("id_terminos_de_token", id_terminos_de_token)
-	#print("len(id_terminos_de_token)", len(id_terminos_de_token))
+	
 	ar = numpy.asarray(id_terminos_de_token)
 	ar2 = copy.deepcopy(ar)
 	id_terminos_de_token2 = copy.deepcopy(id_terminos_de_token)
-	for index_term, term in enumerate(ar):
-		for index, tupla in enumerate(term):
+	for term in ar:
+		for tupla in term:
 			longitud_termino = tupla[1]
 			id_desc=tupla[0]
 			cont=0
 			for term2 in ar2:
-				for index2, tupla2 in enumerate(term2):
+				for tupla2 in term2:
 					if tupla2[0] == id_desc:
 						cont=cont+1
 			if cont == longitud_termino:
 				termino_correcto.append(tupla)
-	#print("termino_correcto", termino_correcto)
-	#print("len(termino_correcto)", len(termino_correcto))
-	print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
+
+	#print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
 	# ---------ELIMINAR REPETIDOS GENERADOS EN EL PROCESO INMEDIATO ANTERIOR
 	termino_correcto2 = copy.deepcopy(termino_correcto)
 	termino_correct_sin_repetido=[]
 	for term in termino_correcto:
 		if term[0] not in termino_correct_sin_repetido:
 			termino_correct_sin_repetido.append(term[0])
-	print("--- %s seconds etapa 7 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 7 ---" % (time.time() - start_time))
 
 	# ---------EXTRAER CONCEPTOS DE ACUARDO A LAS DESCRIPCIONES
 	conceptos = []
@@ -94,11 +93,11 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		desc = DescriptionS.objects.filter(id =int(term))
 		conceptos.append([desc[0].conceptid, ])
 	data=""
-	print("--- %s seconds etapa 8 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 8 ---" % (time.time() - start_time))
 	#---------VERIFICACION SI EL ORDEN DE PALABRAS EN LA DESCRIPCION Y FRASE ESTA TAL CUAL DE MANERA VCONSECUTIVA
 	BooleanTalCual =[]
 	descSeguncon =[]
-	for indxconc, conc in enumerate(conceptos):
+	for conc in conceptos:
 		esta=0
 		descripciones = DescriptionS.objects.filter(conceptid = str(conc[0]))
 		for descripcion in descripciones:
@@ -120,7 +119,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		if agregar == 1:
 			#print("entre en agregar ", indexB)
 			conceptos2.append(conceptos[indexB])
-	print("--- %s seconds etapa 9 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 9 ---" % (time.time() - start_time))
 	# ---------ELIMINAR COCNEPCTOS QUE ESTAN CONTENIDO EN CONCEPTOS CON UNA DESCRIPCION MAYOR
 	conceptos3=[]
 	Sort_4(descSeguncon)
@@ -138,7 +137,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	frasePrueba2=""
 
 	aumento=0
-	print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
 	# ---------AÑADIR ENTRE PARENTESIS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	for indxconc3, conc3 in enumerate(conceptos3):
 		descripciones = DescriptionS.objects.filter(conceptid = str(conc3[0]))
@@ -152,11 +151,10 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' ('+FSN.term+')' + frasePrueba2[(indice_final):]
-	print("--- %s seconds etapa 11 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 11 ---" % (time.time() - start_time))
 	# ---------AÑADIR PROPIEDAD "EXTENSION" AL JSON PARA MOSTRAR CUANTOS CONCEPTOS SE ENCONTRARON Y SU ID		
 	if len(conceptos3) >= 1:
-		for indexItem, item in enumerate(conceptos3):
-			print(indexItem)
+		for item in conceptos3:
 			if "extension" not in val['resource']:
 				val['resource'].update( {"extension": [{
 				"url" : "codeSNOMEDActivo "+str(indexP),
