@@ -27,9 +27,10 @@ def Sort_4(sub_li):
 
 def ProcesarOracion2(frasePrueba, indexP, val):
 	stop_words = set(stopwords.words("spanish"))
-	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
-	#tokens_palabras = [t for t in frasePrueba.split()]
-	#print(tokens_palabras)
+	tokens_palabras1 = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
+	tokens_palabras = [t for t in frasePrueba.split()]
+	print("tokens_palabras",tokens_palabras)
+	print("tokens´_palabras1",tokens_palabras1)
 	"""
 	for i, s in enumerate(tokens_palabras):
 		tokens_palabras[i] = s.lower()#convierto las tokens(palabras) en minusculas
