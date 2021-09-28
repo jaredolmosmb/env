@@ -25,7 +25,7 @@ def Sort_4(sub_li):
 	sub_li.sort(key = lambda x: x[4],reverse=True)
 	return sub_li
 
-def ProcesarOracion2(frasePrueba, indx, val):
+def ProcesarOracion2(frasePrueba, indexP, val):
 	stop_words = set(stopwords.words("spanish"))
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
 	#tokens_palabras = [t for t in frasePrueba.split()]
@@ -201,7 +201,7 @@ def ProcesarOracion2(frasePrueba, indx, val):
 				#	aumento=aumento + len(FSN.term)
 				#print("frasePrueba2", frasePrueba2)
 				#print("indice_final", indice_final)
-	print("conceptos3",conceptos3)
+	#print("conceptos3",conceptos3)
 
 
 	if len(conceptos3) >= 1:
@@ -209,12 +209,12 @@ def ProcesarOracion2(frasePrueba, indx, val):
 			print(indexItem)
 			if "extension" not in val['resource']:
 				val['resource'].update( {"extension": [{
-				"url" : "codeSNOMEDActivo "+str(indx),
+				"url" : "codeSNOMEDActivo "+str(indexP),
 				"text" : item[0]
 				}]} )
 			else:
 				val['resource']["extension"].append( {
-				"url" : "codeSNOMEDActivo "+str(indx),
+				"url" : "codeSNOMEDActivo "+str(indexP),
 				"text" : item[0]
 				} )
 	if frasePrueba2 == "":
@@ -494,7 +494,7 @@ def ProcesarView(request):
 			 		stop_words = set(stopwords.words("spanish"))
 			 		frasePrueba = frasePrueba.replace(',', '.')
 			 		tokens_frases = sent_tokenize(frasePrueba)
-			 		print("token_frases antes de funcion", tokens_frases)
+			 		#print("token_frases antes de funcion", tokens_frases)
 			 		fraseFinal = ""
 			 		if tokens_frases:
 			 			for indx, frases in enumerate(tokens_frases):
