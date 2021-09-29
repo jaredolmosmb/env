@@ -41,13 +41,13 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	for indx, i in enumerate(arfil):#por cada token en la frase
 		id_terminos_de_token.append([])
 		for j in bd_tokens:#por cada token en la bd
-			if j.token == i and j.largo_palabras_termino <= len(filt_frasePrueba):#si token de frase esta en token de la instancia de la bd
+			if j.token == i and j.largo_palabras_termino <=  len(filt_frasePrueba):#si token de frase esta en token de la instancia de la bd
 				#id_terminos_de_token[indx].append([j.id_descripcion, j.largo_palabras_termino, j.token])#añado id de la descripcion que continee el token de la frase
 				id_terminos_de_token[indx].append([int(j.id_descripcion), j.largo_palabras_termino])#añado id de la descripcion que continee el token de la frase
 	max=0
 	#print("--- %s seconds etapa 3 ---" % (time.time() - start_time))
 	# ---------ELIMINAR DESCRIPCIONES QUE TENGAN MAS PALABRAS QUE LA DE LA FRASE A PROCESAR
-	for term in id_terminos_de_token:
+	for term in id_terminos_de_token:   
 		for index, tupla in enumerate(term):
 			if tupla[1]>len(id_terminos_de_token):
 				term.remove(term[index])
@@ -65,18 +65,22 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	
 	ar = numpy.asarray(id_terminos_de_token)
 	ar2 = copy.deepcopy(ar)
-	id_terminos_de_token2 = copy.deepcopy(id_terminos_de_token)
+	# id_terminos_de_token2 = copy.deepcopy(id_terminos_de_token)
+	contador = 0
+	contador2 = 0
 	for term in ar:
 		for tupla in term:
 			longitud_termino = tupla[1]
 			id_desc=tupla[0]
 			cont=0
-			for term2 in ar2:
+			for term2 in ar2[contador:]:
 				for tupla2 in term2:
 					if tupla2[0] == id_desc:
 						cont=cont+1
 			if cont == longitud_termino:
 				termino_correcto.append(tupla)
+			contador2 = contador2 + 1
+		contador = contador + 1
 
 	#print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
 	# ---------ELIMINAR REPETIDOS GENERADOS EN EL PROCESO INMEDIATO ANTERIOR
