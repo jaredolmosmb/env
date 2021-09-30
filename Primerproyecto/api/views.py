@@ -17,6 +17,10 @@ import nltk
 import time
 import es_core_news_sm
 import numpy
+import spacy
+import threading
+
+
 
 def Sort(sub_li): 
 	sub_li.sort(key = lambda x: x[1],reverse=True)
@@ -29,11 +33,20 @@ def Sort_4(sub_li):
 def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
 	stop_words = set(stopwords.words("spanish"))
+	#nlp = spacy.load('es_core_news_sm')
+	#doc=nlp(frasePrueba)
+	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
+	#print(sub_toks) 
+
+	#print([(w.text, w.pos_, w.dep_) for w in doc])
+	#print("doc", doc)
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
 	#print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
 	# ---------ELIMINAR STOPWORDS
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
 	#print("--- %s seconds etapa 2 ---" % (time.time() - start_time))
+
+
 	# ---------GENERAR LISTA ANIDADA POR CADA TOKEN = [ID_DESCRIPCION, LARGO_PALABRAS]
 	id_terminos_de_token=[]
 	bd_tokens = TokensDiagnosticos.objects.raw("SELECT * FROM `api_tokensdiagnosticos` WHERE token IN %s", [tuple(filt_frasePrueba)])
@@ -46,50 +59,47 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				id_terminos_de_token[indx].append([int(j.id_descripcion), j.largo_palabras_termino])#añado id de la descripcion que continee el token de la frase
 	max=0
 	#print("--- %s seconds etapa 3 ---" % (time.time() - start_time))
-	# ---------ELIMINAR DESCRIPCIONES QUE TENGAN MAS PALABRAS QUE LA DE LA FRASE A PROCESAR
-	for term in id_terminos_de_token:   
-		for index, tupla in enumerate(term):
-			if tupla[1]>len(id_terminos_de_token):
-				term.remove(term[index])
-	#print("--- %s seconds etapa 4 ---" % (time.time() - start_time))
-	# ---------ORDENAR CADA LISTA ANIDADA DE CADA TOKEN DE LARGO DE PALABRAS EN DESCRIPCION DE MANERA DESCENDENTE
+
+
+	# ---------ELIMINAR DESCRIPCIONES QUE TENGAN MAS PALABRAS QUE LA DE LA FRASE A PROCESAR, ORDENAR CADA LISTA ANIDADA DE CADA TOKEN DE LARGO DE PALABRAS EN DESCRIPCION DE MANERA DESCENDENTE
 	for term in id_terminos_de_token:
-		Sort(term)
-		for desc, lon in term:
-			if lon>max:
-				max=lon
-				idMax = desc
-	#print("--- %s seconds etapa 5 ---" % (time.time() - start_time))
+		Sort(term)	   
+	#print("--- %s seconds etapa 4 ---" % (time.time() - start_time))
+
 	# ---------IDENTIFICACIÓN DE DESCRIPCIONES QUE CONTENGAN AL TOKEN CON LA MISMA LONGITUD QU ELA FRASE PROCESADA
 	termino_correcto=[]
 	
 	ar = numpy.asarray(id_terminos_de_token)
 	ar2 = copy.deepcopy(ar)
 	# id_terminos_de_token2 = copy.deepcopy(id_terminos_de_token)
-	contador = 0
+	contador = 1
 	contador2 = 0
 	for term in ar:
 		for tupla in term:
 			longitud_termino = tupla[1]
 			id_desc=tupla[0]
-			cont=0
+			cont=1
 			for term2 in ar2[contador:]:
 				for tupla2 in term2:
 					if tupla2[0] == id_desc:
 						cont=cont+1
 			if cont == longitud_termino:
-				termino_correcto.append(tupla)
-			contador2 = contador2 + 1
-		contador = contador + 1
+				if tupla not in termino_correcto:
+					termino_correcto.append(tupla)
+		if contador != ar.size:
+			contador = contador + 1
 
-	#print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 5 ---" % (time.time() - start_time))
+
+
 	# ---------ELIMINAR REPETIDOS GENERADOS EN EL PROCESO INMEDIATO ANTERIOR
-	termino_correcto2 = copy.deepcopy(termino_correcto)
+	#termino_correcto2 = copy.deepcopy(termino_correcto)
 	termino_correct_sin_repetido=[]
 	for term in termino_correcto:
 		if term[0] not in termino_correct_sin_repetido:
 			termino_correct_sin_repetido.append(term[0])
-	#print("--- %s seconds etapa 7 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
+
 
 	# ---------EXTRAER CONCEPTOS DE ACUARDO A LAS DESCRIPCIONES
 	conceptos = []
@@ -97,7 +107,9 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		desc = DescriptionS.objects.filter(id =int(term))
 		conceptos.append([desc[0].conceptid, ])
 	data=""
-	#print("--- %s seconds etapa 8 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 7 ---" % (time.time() - start_time))
+
+
 	#---------VERIFICACION SI EL ORDEN DE PALABRAS EN LA DESCRIPCION Y FRASE ESTA TAL CUAL DE MANERA VCONSECUTIVA
 	BooleanTalCual =[]
 	descSeguncon =[]
@@ -123,7 +135,9 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		if agregar == 1:
 			#print("entre en agregar ", indexB)
 			conceptos2.append(conceptos[indexB])
-	#print("--- %s seconds etapa 9 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 8 ---" % (time.time() - start_time))
+
+
 	# ---------ELIMINAR COCNEPCTOS QUE ESTAN CONTENIDO EN CONCEPTOS CON UNA DESCRIPCION MAYOR
 	conceptos3=[]
 	Sort_4(descSeguncon)
@@ -141,7 +155,9 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	frasePrueba2=""
 
 	aumento=0
-	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 9 ---" % (time.time() - start_time))
+
+
 	# ---------AÑADIR ENTRE PARENTESIS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	for indxconc3, conc3 in enumerate(conceptos3):
 		descripciones = DescriptionS.objects.filter(conceptid = str(conc3[0]))
@@ -155,7 +171,9 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' ('+FSN.term+')' + frasePrueba2[(indice_final):]
-	#print("--- %s seconds etapa 11 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
+
+
 	# ---------AÑADIR PROPIEDAD "EXTENSION" AL JSON PARA MOSTRAR CUANTOS CONCEPTOS SE ENCONTRARON Y SU ID		
 	if len(conceptos3) >= 1:
 		for item in conceptos3:
