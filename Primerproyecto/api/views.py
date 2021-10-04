@@ -203,7 +203,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 			    id_descripcion=j.id,
 			    largo_palabras_termino=len(filt_tokens))
 				descAceptadas.append([k.lower(), j.id, len(filt_tokens)])
-	print("descAceptadas", descAceptadas)
+	#print("descAceptadas", descAceptadas)
 	
 
 	if frasePrueba2 == "":
