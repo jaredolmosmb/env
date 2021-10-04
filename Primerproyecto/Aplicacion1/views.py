@@ -1,3 +1,5 @@
+
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.template.loader import render_to_string 
@@ -190,7 +192,7 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'PruebaNegacion'
+	recurso = 'medicamento'
 
 	if (recurso == 'PruebaNegacion'):
 		print("estoy en pruebaNegacion")
