@@ -33,7 +33,7 @@ def Sort_4(sub_li):
 def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
 	stop_words = set(stopwords.words("spanish"))
-	#nlp = spacy.load('es_core_news_sm')
+	#nlp = spacy.load('es_core_news_sm')  
 	#doc=nlp(frasePrueba)
 	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
 	#print(sub_toks) 
