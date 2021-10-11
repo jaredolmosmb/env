@@ -35,14 +35,16 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	stop_words = set(stopwords.words("spanish"))
 	#nlp = spacy.load('es_core_news_sm')  
 	#doc=nlp(frasePrueba)
-	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
-	#print(sub_toks) 
-
 	#print([(w.text, w.pos_, w.dep_) for w in doc])
 	#print("doc", doc)
+	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
+	#print("sub_toks", sub_toks) 
+
+	
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
 	print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
-	# ---------ELIMINAR STOPWORDS
+	# ---------ELIMINAR STOPWORDS Y SUJETO DE ORACION
+	#tokens_palabras = [w for w in tokens_palabras if not w in sub_toks]
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
 	print("--- %s seconds etapa 2 ---" % (time.time() - start_time))
 
@@ -216,16 +218,16 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
 	stop_words = set(stopwords.words("spanish"))
-	#nlp = spacy.load('es_core_news_sm')
+	#nlp = spacy.load('es_core_news_sm')  
 	#doc=nlp(frasePrueba)
-	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
-	#print(sub_toks) 
-
 	#print([(w.text, w.pos_, w.dep_) for w in doc])
 	#print("doc", doc)
+	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
+	#print("sub_toks", sub_toks) 
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
 	print("--- %s seconds etapa 1 de bd frecuentes---" % (time.time() - start_time))
-	# ---------ELIMINAR STOPWORDS
+	# ---------ELIMINAR STOPWORDS Y SUJETOS (NSUBJ)
+	#tokens_palabras = [w for w in tokens_palabras if not w in sub_toks]
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
 	print("--- %s seconds etapa 2 bd frecuentes---" % (time.time() - start_time))
 
