@@ -42,11 +42,11 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 
 	
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
-	print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
 	# ---------ELIMINAR STOPWORDS Y SUJETO DE ORACION
 	#tokens_palabras = [w for w in tokens_palabras if not w in sub_toks]
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
-	print("--- %s seconds etapa 2 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 2 ---" % (time.time() - start_time))
 
 
 	# ---------GENERAR LISTA ANIDADA POR CADA TOKEN = [ID_DESCRIPCION, LARGO_PALABRAS]
@@ -61,13 +61,13 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				#id_terminos_de_token[indx].append([j.id_descripcion, j.largo_palabras_termino, j.token])#añado id de la descripcion que continee el token de la frase
 				id_terminos_de_token[indx].append([int(j.id_descripcion), j.largo_palabras_termino])#añado id de la descripcion que continee el token de la frase
 	max=0
-	print("--- %s seconds etapa 3 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 3 ---" % (time.time() - start_time))
 
 
 	# ---------ELIMINAR DESCRIPCIONES QUE TENGAN MAS PALABRAS QUE LA DE LA FRASE A PROCESAR, ORDENAR CADA LISTA ANIDADA DE CADA TOKEN DE LARGO DE PALABRAS EN DESCRIPCION DE MANERA DESCENDENTE
 	for term in id_terminos_de_token:
 		Sort(term)	   
-	print("--- %s seconds etapa 4 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 4 ---" % (time.time() - start_time))
 
 	# ---------IDENTIFICACIÓN DE DESCRIPCIONES QUE CONTENGAN AL TOKEN CON LA MISMA LONGITUD QU ELA FRASE PROCESADA
 	termino_correcto=[]
@@ -93,7 +93,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		if contador != ar.size:
 			contador = contador + 1
 
-	print("--- %s seconds etapa 5 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 5 ---" % (time.time() - start_time))
 
 
 	# ---------ELIMINAR REPETIDOS GENERADOS EN EL PROCESO INMEDIATO ANTERIOR
@@ -102,7 +102,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	for term in termino_correcto:
 		if term[0] not in termino_correct_sin_repetido:
 			termino_correct_sin_repetido.append(term[0])
-	print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
 
 
 	# ---------EXTRAER CONCEPTOS DE ACUARDO A LAS DESCRIPCIONES
@@ -111,7 +111,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		desc = DescriptionS.objects.filter(id =int(term))
 		conceptos.append([desc[0].conceptid, ])
 	data=""
-	print("--- %s seconds etapa 7 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 7 ---" % (time.time() - start_time))
 
 
 	#---------VERIFICACION SI EL ORDEN DE PALABRAS EN LA DESCRIPCION Y FRASE ESTA TAL CUAL DE MANERA VCONSECUTIVA
@@ -139,7 +139,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		if agregar == 1:
 			#print("entre en agregar ", indexB)
 			conceptos2.append(conceptos[indexB])
-	print("--- %s seconds etapa 8 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 8 ---" % (time.time() - start_time))
 
 
 	# ---------ELIMINAR CONCEPTOS QUE ESTAN CONTENIDO EN CONCEPTOS CON UNA DESCRIPCION MAYOR
@@ -159,7 +159,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	frasePrueba2=""
 
 	aumento=0
-	print("--- %s seconds etapa 9 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 9 ---" % (time.time() - start_time))
 
 
 	# ---------AÑADIR ENTRE PARENTESIS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
@@ -176,7 +176,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' ('+FSN.term+')' + frasePrueba2[(indice_final):]
-	print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
 
 
 	# ---------AÑADIR PROPIEDAD "EXTENSION" AL JSON PARA MOSTRAR CUANTOS CONCEPTOS SE ENCONTRARON Y SU ID		
@@ -225,11 +225,11 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
 	#print("sub_toks", sub_toks) 
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
-	print("--- %s seconds etapa 1 de bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 1 de bd frecuentes---" % (time.time() - start_time))
 	# ---------ELIMINAR STOPWORDS Y SUJETOS (NSUBJ)
 	#tokens_palabras = [w for w in tokens_palabras if not w in sub_toks]
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
-	print("--- %s seconds etapa 2 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 2 bd frecuentes---" % (time.time() - start_time))
 
 
 	# ---------GENERAR LISTA ANIDADA POR CADA TOKEN = [ID_DESCRIPCION, LARGO_PALABRAS]
@@ -244,13 +244,13 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				#id_terminos_de_token[indx].append([j.id_descripcion, j.largo_palabras_termino, j.token])#añado id de la descripcion que continee el token de la frase
 				id_terminos_de_token[indx].append([int(j.id_descripcion), j.largo_palabras_termino])#añado id de la descripcion que continee el token de la frase
 	max=0
-	print("--- %s seconds etapa 3 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 3 bd frecuentes---" % (time.time() - start_time))
 
 
 	# ---------ELIMINAR DESCRIPCIONES QUE TENGAN MAS PALABRAS QUE LA DE LA FRASE A PROCESAR, ORDENAR CADA LISTA ANIDADA DE CADA TOKEN DE LARGO DE PALABRAS EN DESCRIPCION DE MANERA DESCENDENTE
 	for term in id_terminos_de_token:
 		Sort(term)	   
-	print("--- %s seconds etapa 4 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 4 bd frecuentes---" % (time.time() - start_time))
 
 	# ---------IDENTIFICACIÓN DE DESCRIPCIONES QUE CONTENGAN AL TOKEN CON LA MISMA LONGITUD QU ELA FRASE PROCESADA
 	termino_correcto=[]
@@ -276,7 +276,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 		if contador != ar.size:
 			contador = contador + 1
 
-	print("--- %s seconds etapa 5 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 5 bd frecuentes---" % (time.time() - start_time))
 
 
 	# ---------ELIMINAR REPETIDOS GENERADOS EN EL PROCESO INMEDIATO ANTERIOR
@@ -285,7 +285,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 	for term in termino_correcto:
 		if term[0] not in termino_correct_sin_repetido:
 			termino_correct_sin_repetido.append(term[0])
-	print("--- %s seconds etapa 6 bd frecuentes ---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 6 bd frecuentes ---" % (time.time() - start_time))
 
 
 	# ---------EXTRAER CONCEPTOS DE ACUARDO A LAS DESCRIPCIONES
@@ -294,7 +294,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 		desc = DescriptionS.objects.filter(id =int(term))
 		conceptos.append([desc[0].conceptid, ])
 	data=""
-	print("--- %s seconds etapa 7 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 7 bd frecuentes---" % (time.time() - start_time))
 
 
 	#---------VERIFICACION SI EL ORDEN DE PALABRAS EN LA DESCRIPCION Y FRASE ESTA TAL CUAL DE MANERA VCONSECUTIVA
@@ -322,7 +322,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 		if agregar == 1:
 			#print("entre en agregar ", indexB)
 			conceptos2.append(conceptos[indexB])
-	print("--- %s seconds etapa 8 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 8 bd frecuentes---" % (time.time() - start_time))
 
 
 	# ---------ELIMINAR COCNEPCTOS QUE ESTAN CONTENIDO EN CONCEPTOS CON UNA DESCRIPCION MAYOR
@@ -342,7 +342,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 	frasePrueba2=""
 
 	aumento=0
-	print("--- %s seconds etapa 9 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 9 bd frecuentes---" % (time.time() - start_time))
 
 
 	# ---------AÑADIR ENTRE PARENTESIS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
@@ -359,7 +359,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' ('+FSN.term+')' + frasePrueba2[(indice_final):]
-	print("--- %s seconds etapa 10 bd frecuentes---" % (time.time() - start_time))
+	#print("--- %s seconds etapa 10 bd frecuentes---" % (time.time() - start_time))
 
 
 	# ---------AÑADIR PROPIEDAD "EXTENSION" AL JSON PARA MOSTRAR CUANTOS CONCEPTOS SE ENCONTRARON Y SU ID		
@@ -666,6 +666,7 @@ def ProcesarView(request):
 			 		frasePrueba = frasePrueba.replace(',', '.')
 			 		tokens_frases = sent_tokenize(frasePrueba)
 			 		#print("token_frases antes de funcion", tokens_frases)
+			 		print("len(tokens_frases)", len(tokens_frases))
 			 		fraseFinal = ""
 			 		#----Procesamiento sin preprocesamiento de frases Frecuentes
 			 		"""
