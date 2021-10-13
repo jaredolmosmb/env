@@ -108,3 +108,39 @@
         }
     ]
 }
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : "ingreso: infarto agudo al miocardio cest cara septal/ timi 2 / grace 69 / heart 4 puntos. Comorido: Hiponatremia leve isotonica euvolemica. Concomitantes"
+                    }
+        }
+    ]
+}
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : "Anemia hemolítica de origen a determinar. Trombocitopenia moderada de origen a determinar (Pbe CID). Anemia grado III OMS Macrocitica Normocromica secundaria en estudio. Sangrado del Tracto Digestivo de origen a determinar Blatchford 8 puntos, AIMS65 2 puntos. Diabetes Mellitus tipo 2 en control. Hipertensión Arterial sistémica de control."
+                    }
+        }
+    ]
+}
