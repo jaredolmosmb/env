@@ -192,7 +192,7 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'medicamento'
+	recurso = 'PruebaNegacion'
 
 	if (recurso == 'PruebaNegacion'):
 		print("estoy en pruebaNegacion")
@@ -421,7 +421,7 @@ def InicioView(request):
 			concepto1 = ConceptS.objects.filter(active ="1") and ConceptS.objects.filter(category_id ="6")
 			print("concepto1.coun", concepto1.count())
 
-			for i in concepto1[100001:115484]:
+			for i in concepto1[110001:115484]:
 				desc = DescriptionS.objects.filter(conceptid = i.id)
 				for j in desc:
 					#print(j.term)
