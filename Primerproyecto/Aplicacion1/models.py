@@ -163,23 +163,6 @@ class LangrefsetS(models.Model):
         managed = False
         db_table = 'langrefset_s'
 
-class LoincEspaña(models.Model):
-    id = models.CharField(max_length=10, primary_key=True)
-    component = models.CharField(max_length=176)
-    prop = models.CharField(max_length=50)
-    time_aspct = models.CharField(max_length=41)
-    system = models.CharField(max_length=117)
-    scale_typ = models.CharField(max_length=20)
-    method_typ = models.CharField(max_length=142)
-    cla = models.CharField(max_length=64)
-    shortname = models.CharField(max_length=9)
-    long_common_name = models.CharField(max_length=100)
-    relatednames2 = models.CharField(max_length=182)
-    LinguisticVariantDisplayName = models.CharField(max_length=28)
-
-    class Meta:
-        managed = False
-        db_table = 'loinc_españa'
 
 class Migrations(models.Model):
     migration = models.CharField(max_length=191)

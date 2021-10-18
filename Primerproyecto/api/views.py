@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.template.loader import render_to_string 
 from django.shortcuts import render
-from Aplicacion1.models import ConceptS, DescriptionS, Synonyms, ConceptosNoEncontrados, LoincEspaña
+from Aplicacion1.models import ConceptS, DescriptionS, Synonyms, ConceptosNoEncontrados
 from django.db.models import Q
 from Aplicacion1.servicios import generarRequest, normalize, validateJSON
 import json
