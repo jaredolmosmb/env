@@ -144,3 +144,13 @@
         }
     ]
 }
+
+{
+  "resourceType" : "DiagnosticReport",
+  "subject" : { "reference" : "Patient/P001" },
+  "identifier" : [{ 
+        "use" : "oficial",
+        "value" : "D001"
+         }],
+  "conclusion" : "dolor de cabeza"
+}
