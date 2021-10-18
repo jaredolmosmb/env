@@ -637,6 +637,7 @@ def InicioView(request):
 			print('json inicial')
 			print(responseMA1)
 			
+			
 			print('json resultado')
 			print(responseMA)
 			data = conclusion
