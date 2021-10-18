@@ -406,8 +406,10 @@ def apiOverview(request):
 
 @api_view(['POST'])
 def ProcesarView(request):
-	recurso = 'bundle'
-	if (recurso == 'bundle'):
+	responseMA = request.data
+	recurso = responseMA['resourceType']
+	print("recurso = ", recurso)
+	if (recurso == 'Bundle'):
 		 start_time = time.time()
 		 responseMA = request.data
 		 responseMA1 = copy.deepcopy(responseMA)

@@ -8,8 +8,6 @@ from api.models import TokensDiagnosticos
 from .servicios import generarRequest, normalize, validateJSON
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
-#from .models import Paciente
-#from .forms import PacienteForm
 import json
 import copy
 import nltk
@@ -197,52 +195,8 @@ def InicioView(request):
 		main()
 		responseMA ={}
 		responseMA1 ={}
-
-		"""
-		with open("TextoLibreDiagnostico.json", "r") as read_file:
-			try:
-				responseMA = json.load(read_file)
-				responseMA1 = copy.deepcopy(responseMA)
-				#print("valido")
-				isValid = True
-			except ValueError as err:
-				#print("invalido")
-				isValid = False
-		if isValid:
-			if 'conclusion' in responseMA:
-				#print("entre en conclusion")
-				frasePrueba = normalize(responseMA['conclusion']).encode("latin-1").decode("utf-8").lower()
-				print(frasePrueba)
-				with open("neg-phrases.txt", "r") as read_file2:
-					frases_neg = read_file2.read()
-					separador = "\n"
-					separado = frases_neg.split(separador)
-
-				
-				nlp = spacy.load("en_core_web_sm")
-				nlp.add_pipe("negex", config={"ent_types":["PERSON","ORG"]})
-
-				doc = nlp("She does not like Steve Jobs but likes Apple products.")
-				for e in doc.ents:
-				    print(e.text, e._.negex)
-
-				nlp2 = spacy.load("es_core_news_sm")
-				nlp2.add_pipe("negex", config={"ent_types":["PERSON","ORG"]})
-
-				doc2 = nlp2("No le gusta Jared pero le gustan los productos Samsung")
-				for e2 in doc2.ents:
-					print(e2.text, e2._.negex)
-				"""
-
-
-
 		data=""
-		#else:
-			#responseMA ={"status": "json invalido"}
-			#responseMA1 = copy.deepcopy(responseMA)
-			#data=""
-
-		
+	
 
 	if (recurso == 'analisisDiagnosticoF'):
 		start_time = time.time()
