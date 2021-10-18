@@ -20,30 +20,6 @@ from .negex import *
 import csv
 # Create your views here.
 
-def main():
-    rfile = open(r'negex_triggersSpa.txt')
-    irules = sortRules(rfile.readlines())
-    reports = csv.reader(open(r'Annotations-1-120.txt','r'), delimiter = '\t')
-    next(reports)
-    reportNum = 0
-    correctNum = 0
-    ofile = open(r'negex_output.txt', 'w')
-    output = []
-    outputfile = csv.writer(ofile, delimiter = '\t')
-    for report in reports:
-        tagger = negTagger(sentence = report[2], phrases = [report[1]], rules = irules, negP=False)
-        report.append(tagger.getNegTaggedSentence())
-        report.append(tagger.getNegationFlag())
-        report = report + tagger.getScopes()
-        reportNum += 1
-        if report[3].lower() == report[5]:
-            correctNum +=1
-        output.append(report)
-    outputfile.writerow(['Percentage correct:', float(correctNum)/float(reportNum)])
-    for row in output:
-        if row:
-            outputfile.writerow(row)
-    ofile.close()
 
 #--------funcion para acomodar tokens por valor de indiece con valor a 1 (largo de palabras de la descrpicion)
 def Sort(sub_li): 
@@ -188,7 +164,7 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'PruebaNegacion'
+	recurso = 'medicamento'
 
 	if (recurso == 'analisisDiagnosticoF'):
 		start_time = time.time()
@@ -1003,7 +979,8 @@ def InicioView(request):
 		# print('json resultado')
 		# print(responseMA)
 		# data = categoria +" y "+ code
-	return render(request, 'Aplicacion1/index.html', {'json1':responseMA1, 'json2':responseMA})
+	return render(request, 'Aplicacion1/index.html')
+	#return render(request, 'Aplicacion1/index.html', {'json1':responseMA1, 'json2':responseMA})
 	#return render(request, 'Aplicacion1/index.html', {'json1':responseMA1, 'json2':responseMA, 'data': data})
 
 
