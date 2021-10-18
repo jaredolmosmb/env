@@ -190,14 +190,6 @@ def InicioView(request):
 	#pacientes = Paciente.objects.all()
 	recurso = 'PruebaNegacion'
 
-	if (recurso == 'PruebaNegacion'):
-		print("estoy en pruebaNegacion")
-		main()
-		responseMA ={}
-		responseMA1 ={}
-		data=""
-	
-
 	if (recurso == 'analisisDiagnosticoF'):
 		start_time = time.time()
 		with open("TextoLibreDiagnostico.json", "r") as read_file:
@@ -636,7 +628,7 @@ def InicioView(request):
 				responseMA.update({"conclusionSNOMED": 0})
 			print('json inicial')
 			print(responseMA1)
-			
+
 			
 			print('json resultado')
 			print(responseMA)
