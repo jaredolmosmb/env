@@ -26,14 +26,6 @@ def Sort(sub_li):
 	sub_li.sort(key = lambda x: x[1],reverse=True)
 	return sub_li
 
-unidades = ["metro", "milimetro", "micrometro", "micra", "nanometro",
-			"kilogramo", "libra", "libra farmacologica", "gramo", "miligramo", 
-			"microgramo", "nanogramo", "litro", "decilitro", "mililitro", "microlitro",
-			"metros", "milimetros", "micrometros", "micras", "nanometros",
-			"kilogramos", "libras", "libras farmacologicas", "gramos", "miligramos", 
-			"microgramos", "nanogramos", "litros", "decilitros", "mililitros", "microlitros", 
-			"m", "mm", "nm", "μm", "nm", "Kg", "lb", "lb farm.",
-			"g", "mg", "mcg", "μg", "ng", "L", "dl", "ml", "μl", "mcl"]
 
 #------Funcion para procesar el motor de búsqueda en una oración
 def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
