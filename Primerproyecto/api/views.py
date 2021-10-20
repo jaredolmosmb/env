@@ -733,7 +733,7 @@ def ProcesarView(request):
 			 	if 'conclusion' in val['resource']:
 			 		frasePrueba = normalize(val['resource']['conclusion']).lower()
 			 		stop_words = set(stopwords.words("spanish"))
-			 		frasePrueba = frasePrueba.replace(',', '.')
+			 		#frasePrueba = frasePrueba.replace(',', '.')
 			 		tokens_frases = sent_tokenize(frasePrueba)
 			 		print("len(tokens_frases)", len(tokens_frases))
 			 		fraseFinal = ""
