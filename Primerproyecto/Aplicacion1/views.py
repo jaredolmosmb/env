@@ -15,7 +15,6 @@ import time
 import es_core_news_sm
 import spacy
 from negspacy.negation import Negex
-
 from .negex import *
 import csv
 # Create your views here.
@@ -154,6 +153,7 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 		data=""
 	print("--- %s seconds ---" % (time.time() - start_time))
 
+#funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
 	recurso = 'medicamento'

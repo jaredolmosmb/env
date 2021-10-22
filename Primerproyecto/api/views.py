@@ -372,7 +372,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
-				frasePrueba2 = frasePrueba2[:(indice_final)] + ' ('+FSN.term+')' + frasePrueba2[(indice_final):]
+				frasePrueba2 = frasePrueba2[:(indice_final)] + ' —'+FSN.term+'—' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 bd frecuentes---" % (time.time() - start_time))
 
 
