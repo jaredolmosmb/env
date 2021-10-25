@@ -15,6 +15,8 @@ import time
 import es_core_news_sm
 import spacy
 from negspacy.negation import Negex
+
+
 from .negex import *
 import csv
 # Create your views here.
@@ -157,6 +159,12 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
 	recurso = 'medicamento'
+
+	if (recurso == 'altaRef'):
+		path = path_dir + 'TipoDoc.csv'
+		with connections["default"].cursor() as cursor:
+            cursor.execute("load data infile %s into table extendedmaprefset_s columns terminated by '\t' lines terminated by '\r\n'	ignore 1 lines;", [path])
+        
 
 	if (recurso == 'analisisDiagnosticoF'):
 		start_time = time.time()
