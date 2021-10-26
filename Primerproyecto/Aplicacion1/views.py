@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.template.loader import render_to_string 
 from django.shortcuts import render
-from .models import ConceptS, DescriptionS, Synonyms, ConceptosNoEncontrados
+from .models import ConceptS, DescriptionS, Synonyms, ConceptosNoEncontrados, ExtendedmaprefsetS
 from django.db.models import Q
 from api.models import TokensDiagnosticos
 from .servicios import generarRequest, normalize, validateJSON
@@ -158,12 +158,39 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'medicamento'
+	recurso = 'cie10'
 
-	if (recurso == 'altaRef'):
-		path = path_dir + 'TipoDoc.csv'
-		with connections["default"].cursor() as cursor:
-            cursor.execute("load data infile %s into table extendedmaprefset_s columns terminated by '\t' lines terminated by '\r\n'	ignore 1 lines;", [path])
+	if (recurso == 'cie10'):
+		mapeo = ExtendedmaprefsetS.objects.all()
+		cont6 = 0
+		cont13 = 0
+		cont15 = 0
+		cont1 = 0
+		cont16 = 0
+		cont5 = 0
+		lista_categorias = []
+		for elemento in mapeo:
+			FSN = DescriptionS.objects.get(conceptid = elemento.referencedcomponentid, typeid = "900000000000003001", active = "1")
+			if FSN.category_id == 6:
+				cont6 = cont6+1
+			if FSN.category_id == 13:
+				cont13 = cont13+1
+			if FSN.category_id == 15:
+				cont15 = cont15+1
+			if FSN.category_id == 1:
+				cont1 = cont1+1
+			if FSN.category_id == 16:
+				cont16 = cont16+1
+			if FSN.category_id == 5:
+				cont5 = cont5+1
+			if FSN.category_id not in lista_categorias:
+				lista_categorias.append(FSN.category_id)
+
+			#print(FSN.term)
+		print(lista_categorias)
+		print("cont6, cont13, cont15, cont1, cont16, cont5", cont6, cont13, cont15, cont1, cont16, cont5)
+
+
         
 
 	if (recurso == 'analisisDiagnosticoF'):
