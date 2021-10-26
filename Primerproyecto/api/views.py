@@ -488,11 +488,13 @@ def ProcesarView(request):
 	 			if not existe:
 	 				ConceptosNoEncontrados.objects.create(concepto = conclusion)
 		if 'conclusion' in responseMA:
-	 		frasePrueba = normalize(responseMA['conclusion']).lower()
+	 		#frasePrueba = normalize(responseMA['conclusion']).lower()
+	 		frasePrueba = responseMA['conclusion'].lower()
 	 		stop_words = set(stopwords.words("spanish"))
 	 		frasePrueba = frasePrueba.replace(',', '.')
 	 		tokens_frases = sent_tokenize(frasePrueba)
 	 		print("len(tokens_frases)", len(tokens_frases))
+	 		print("tokens_frases", tokens_frases)
 	 		fraseFinal = ""
 	 		#----Procesamiento sin preprocesamiento de frases Frecuentes
 	 		"""
@@ -731,7 +733,8 @@ def ProcesarView(request):
 			 			if not existe:
 			 				ConceptosNoEncontrados.objects.create(concepto = conclusion)
 			 	if 'conclusion' in val['resource']:
-			 		frasePrueba = normalize(val['resource']['conclusion']).lower()
+			 		frasePrueba = val['resource']['conclusion'].lower() 
+			 		#frasePrueba = normalize(val['resource']['conclusion']).lower()
 			 		stop_words = set(stopwords.words("spanish"))
 			 		#frasePrueba = frasePrueba.replace(',', '.')
 			 		tokens_frases = sent_tokenize(frasePrueba)
