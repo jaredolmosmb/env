@@ -162,7 +162,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	#print("--- %s seconds etapa 9 ---" % (time.time() - start_time))
 
 
-	# ---------AÑADIR ENTRE PARENTESIS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
+	# ---------AÑADIR ENTRE GUIONES MEDIOS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	conta = 0
 	for indxconc3, conc3 in enumerate(conceptos3):
 		descripciones = DescriptionS.objects.filter(conceptid = str(conc3[0]))
@@ -359,7 +359,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 	#print("--- %s seconds etapa 9 bd frecuentes---" % (time.time() - start_time))
 
 
-	# ---------AÑADIR ENTRE PARENTESIS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
+	# ---------AÑADIR ENTRE GUIONES MEDIOS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	conta = 0
 	for indxconc3, conc3 in enumerate(conceptos3):
 		descripciones = DescriptionS.objects.filter(conceptid = str(conc3[0]))
