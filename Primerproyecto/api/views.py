@@ -491,7 +491,7 @@ def ProcesarView(request):
 	 		#frasePrueba = normalize(responseMA['conclusion']).lower()
 	 		frasePrueba = responseMA['conclusion'].lower()
 	 		stop_words = set(stopwords.words("spanish"))
-	 		frasePrueba = frasePrueba.replace(',', '.')
+	 		#frasePrueba = frasePrueba.replace(',', '.')
 	 		tokens_frases = sent_tokenize(frasePrueba)
 	 		print("len(tokens_frases)", len(tokens_frases))
 	 		print("tokens_frases", tokens_frases)
