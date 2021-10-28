@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
 	path('', views.apiOverview, name =  "api-overview"),
-	path('procesarSNOMED/', views.ProcesarView, name =  "api-procesarSNOMED"),
+	path('procesarSNOMED/Bundle', views.ProcesarBundleView, name =  "api-procesarBundleSNOMED"),
+	path('procesarSNOMED/DiagnosticReport', views.ProcesarDiagnosticReportView, name =  "api-procesarDiagnosticReportSNOMED"),
 	]

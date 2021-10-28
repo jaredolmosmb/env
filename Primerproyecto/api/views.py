@@ -430,104 +430,17 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 @api_view(['GET'])
 def apiOverview(request):
 	api_urls = {
-		'ProcesarSNOMED': '/procesarSNOMED/'
+		'ProcesarSNOMED Bundle': '/procesarSNOMED/Bundle',
+		'ProcesarSNOMED DiagnosticReport': '/procesarSNOMED/DiagnosticReport'
 	}
 	return Response(api_urls)
 
 @api_view(['POST'])
-def ProcesarView(request):
+def ProcesarBundleView(request):
 	responseMA = request.data
 	recurso = responseMA['resourceType']
-	print("recurso = ", recurso)
-	if (recurso == 'DiagnosticReport'):
-		start_time = time.time()
-		if 'conclusionCode' in responseMA:
-	 		conclusionCode = normalize(responseMA['conclusionCode'])
-	 		descripciones = DescriptionS.objects.filter(term = conclusionCode) & DescriptionS.objects.filter(category_id = 6)
-	 		sinonimos = Synonyms.objects.filter(term = conclusionCode)
-	 		if descripciones.count() > 1:
-	 			for i in descripciones:
-		 			con = ConceptS.objects.get(id = i.conceptid)
-		 			if con.active == '0':
-		 				descripciones = descripciones.exclude(id=i.id)
-		 	if sinonimos.count() > 1:
-	 			for i in sinonimos:
-		 			con = ConceptS.objects.get(id = i.conceptid)
-		 			if con.active == '0':
-		 				sinonimos = sinonimos.exclude(id=i.id)
-	 		if descripciones:
-	 			concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
-	 			if concepto.active == '1':
-	 				responseMA.update( {"extension": [{
-	 					"url" : "conclusionCodeSNOMEDActivo",
-	 					"text" : descripciones[0].conceptid
-	 					}]} ) 
-	 			else:
-	 				responseMA.update( {"extension": [{
-	 					"url" : "conclusionCodeSNOMEDInactivo",
-	 					"text" : descripciones[0].conceptid
-	 					}]} ) 
-	 		elif sinonimos:
-	 			concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
-	 			if concepto.active == '1':
-	 				responseMA.update( {"extension": [{
-	 					"url" : "conclusionCodeSNOMEDActivo",
-	 					"text" : sinonimos[0].conceptid
-	 					}]} ) 
-	 			else:
-	 				responseMA.update( {"extension": [{
-	 					"url" : "conclusionCodeSNOMEDInactivo",
-	 					"text" : sinonimos[0].conceptid
-	 					}]} ) 
-	 		else:
-	 			responseMA.update( {"extension": [{
-	 					"url" : "conclusionCodeSNOMED",
-	 					"text" : 0
-	 					}]} ) 
-	 			existe = ConceptosNoEncontrados.objects.get(concepto = conclusion)
-	 			if not existe:
-	 				ConceptosNoEncontrados.objects.create(concepto = conclusion)
-		if 'conclusion' in responseMA:
-	 		#frasePrueba = normalize(responseMA['conclusion']).lower()
-	 		frasePrueba = responseMA['conclusion'].lower()
-	 		stop_words = set(stopwords.words("spanish"))
-	 		#frasePrueba = frasePrueba.replace(',', '.')
-	 		tokens_frases = sent_tokenize(frasePrueba)
-	 		print("len(tokens_frases)", len(tokens_frases))
-	 		print("tokens_frases", tokens_frases)
-	 		fraseFinal = ""
-	 		#----Procesamiento sin preprocesamiento de frases Frecuentes
-	 		"""
-	 		if tokens_frases:
-	 			for indx, frases in enumerate(tokens_frases):
-	 				if indx == 0:
-	 					fraseFinal = fraseFinal + ProcesarOracion2(frases, indx, responseMA, start_time).capitalize()
-	 				else:
-	 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases, indx, responseMA, start_time).capitalize()
-	 				#ProcesarOracion2(frases, indx, responseMA)
-	 		"""
-	 		status_frases = []
-	 		if tokens_frases:
-	 			for indx, frases in enumerate(tokens_frases):
-	 				status_frases.append(ProcesarOracionFrecuentes(frases, indx, responseMA, start_time))
-
-	 				#ProcesarOracion2(frases, indx, responseMA)
-	 		for indx_status, frases_status in enumerate(status_frases):
-	 			if indx_status == 0:
-	 				if frases_status[2] == 1:
-	 					fraseFinal = fraseFinal + frases_status[1].capitalize()
-	 				if frases_status[2] == 0:
-	 					fraseFinal = fraseFinal + ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
-	 			else:
-	 				if frases_status[2] == 1:
-	 					fraseFinal = fraseFinal + " "+ frases_status[1].capitalize()
-	 				if frases_status[2] == 0:
-	 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
-
-
-
-	 		responseMA.update( {"conclusion": fraseFinal} )
-		print("--- %s seconds Resource DiagnosticReport alone ---" % (time.time() - start_time))	
+	#print("recurso = ", recurso)
+	
 
 	if (recurso == 'Bundle'):
 		 start_time = time.time()
@@ -729,9 +642,9 @@ def ProcesarView(request):
 			 					"url" : "conclusionCodeSNOMED",
 			 					"text" : 0
 			 					}]} ) 
-			 			existe = ConceptosNoEncontrados.objects.get(concepto = conclusion)
+			 			existe = ConceptosNoEncontrados.objects.filter(concepto = conclusionCode).first()
 			 			if not existe:
-			 				ConceptosNoEncontrados.objects.create(concepto = conclusion)
+			 				ConceptosNoEncontrados.objects.create(concepto = conclusionCode)
 			 	if 'conclusion' in val['resource']:
 			 		frasePrueba = val['resource']['conclusion'].lower() 
 			 		#frasePrueba = normalize(val['resource']['conclusion']).lower()
@@ -929,5 +842,103 @@ def ProcesarView(request):
 
 		 data=""
 		 print("--- %s seconds ---" % (time.time() - start_time))
+
+	return Response(responseMA)
+
+@api_view(['POST'])
+def ProcesarDiagnosticReportView(request):
+	responseMA = request.data
+	recurso = responseMA['resourceType']
+	if (recurso == 'DiagnosticReport'):
+		start_time = time.time()
+		if 'conclusionCode' in responseMA:
+	 		conclusionCode = normalize(responseMA['conclusionCode'])
+	 		print("conclusionCode", conclusionCode)
+	 		descripciones = DescriptionS.objects.filter(term = conclusionCode) & DescriptionS.objects.filter(category_id = 6)
+	 		sinonimos = Synonyms.objects.filter(term = conclusionCode)
+	 		if descripciones.count() > 1:
+	 			for i in descripciones:
+		 			con = ConceptS.objects.get(id = i.conceptid)
+		 			if con.active == '0':
+		 				descripciones = descripciones.exclude(id=i.id)
+		 	if sinonimos.count() > 1:
+	 			for i in sinonimos:
+		 			con = ConceptS.objects.get(id = i.conceptid)
+		 			if con.active == '0':
+		 				sinonimos = sinonimos.exclude(id=i.id)
+	 		if descripciones:
+	 			concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
+	 			if concepto.active == '1':
+	 				responseMA.update( {"extension": [{
+	 					"url" : "conclusionCodeSNOMEDActivo",
+	 					"text" : descripciones[0].conceptid
+	 					}]} ) 
+	 			else:
+	 				responseMA.update( {"extension": [{
+	 					"url" : "conclusionCodeSNOMEDInactivo",
+	 					"text" : descripciones[0].conceptid
+	 					}]} ) 
+	 		elif sinonimos:
+	 			concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
+	 			if concepto.active == '1':
+	 				responseMA.update( {"extension": [{
+	 					"url" : "conclusionCodeSNOMEDActivo",
+	 					"text" : sinonimos[0].conceptid
+	 					}]} ) 
+	 			else:
+	 				responseMA.update( {"extension": [{
+	 					"url" : "conclusionCodeSNOMEDInactivo",
+	 					"text" : sinonimos[0].conceptid
+	 					}]} ) 
+	 		else:
+	 			responseMA.update( {"extension": [{
+	 					"url" : "conclusionCodeSNOMED",
+	 					"text" : 0
+	 					}]} ) 
+	 			if conclusionCode != "":	 				
+		 			existe = ConceptosNoEncontrados.objects.filter(concepto = conclusionCode).first()
+		 			if not existe:
+		 				ConceptosNoEncontrados.objects.create(concepto = conclusionCode)
+		if 'conclusion' in responseMA:
+	 		#frasePrueba = normalize(responseMA['conclusion']).lower()
+	 		frasePrueba = responseMA['conclusion'].lower()
+	 		stop_words = set(stopwords.words("spanish"))
+	 		#frasePrueba = frasePrueba.replace(',', '.')
+	 		tokens_frases = sent_tokenize(frasePrueba)
+	 		#print("len(tokens_frases)", len(tokens_frases))
+	 		#print("tokens_frases", tokens_frases)
+	 		fraseFinal = ""
+	 		#----Procesamiento sin preprocesamiento de frases Frecuentes
+	 		"""
+	 		if tokens_frases:
+	 			for indx, frases in enumerate(tokens_frases):
+	 				if indx == 0:
+	 					fraseFinal = fraseFinal + ProcesarOracion2(frases, indx, responseMA, start_time).capitalize()
+	 				else:
+	 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases, indx, responseMA, start_time).capitalize()
+	 				#ProcesarOracion2(frases, indx, responseMA)
+	 		"""
+	 		status_frases = []
+	 		if tokens_frases:
+	 			for indx, frases in enumerate(tokens_frases):
+	 				status_frases.append(ProcesarOracionFrecuentes(frases, indx, responseMA, start_time))
+
+	 				#ProcesarOracion2(frases, indx, responseMA)
+	 		for indx_status, frases_status in enumerate(status_frases):
+	 			if indx_status == 0:
+	 				if frases_status[2] == 1:
+	 					fraseFinal = fraseFinal + frases_status[1].capitalize()
+	 				if frases_status[2] == 0:
+	 					fraseFinal = fraseFinal + ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
+	 			else:
+	 				if frases_status[2] == 1:
+	 					fraseFinal = fraseFinal + " "+ frases_status[1].capitalize()
+	 				if frases_status[2] == 0:
+	 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
+
+
+
+	 		responseMA.update( {"conclusion": fraseFinal} )
+		print("--- %s seconds Resource DiagnosticReport alone ---" % (time.time() - start_time))	
 
 	return Response(responseMA)
