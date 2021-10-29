@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from .models import ConceptS, DescriptionS, Synonyms, ConceptosNoEncontrados, ExtendedmaprefsetS
 from django.db.models import Q
-from api.models import TokensDiagnosticos
+from api.models import TokensDiagnosticos, TokensProcedures
 from .servicios import generarRequest, normalize, validateJSON
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
@@ -158,7 +158,7 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'cie10'
+	recurso = 'analisisProcedure'
 
 	if (recurso == 'cie10'):
 		mapeo = ExtendedmaprefsetS.objects.all()
@@ -384,6 +384,58 @@ def InicioView(request):
 					filt_tokens = [w.lower() for w in tokens if not w.lower() in stop_words]
 					for k in filt_tokens:
 						TokensDiagnosticos.objects.create(token=k.lower(), id_descripcion=j.id, largo_palabras_termino=len(filt_tokens))
+						descAceptadas.append([k.lower(), j.id, len(filt_tokens)])
+
+
+
+			#for j in range(1):
+				#for i in descripciones[j*5000:(j+1)*5000-1]:
+					#concepto = ConceptS.objects.get(id = i.conceptid)
+					#if concepto.active == "1":
+						#descAceptadas.append(i)
+			print("len-descAceptadas", len(descAceptadas))
+			#print("descAceptadas", descAceptadas)
+			print("--- %s seconds ---" % (time.time() - start_time))
+
+			data = "doc"
+
+		else:
+			responseMA ={"status": "json invalido"}
+			responseMA1 = copy.deepcopy(responseMA)
+			data=""
+
+	if (recurso == 'analisisProcedure'):
+		with open("TextoLibreAdministracion.json", "r") as read_file:
+			try:
+				responseMA = json.load(read_file)
+				responseMA1 = copy.deepcopy(responseMA)
+				#print("valido")
+				isValid = True
+			except ValueError as err:
+				#print("invalido")
+				isValid = False
+		if isValid:
+			#frasePrueba = "El sistema financiero, para los efectos de esta Ley, se compone por el Banco de México, las instituciones de crédito, de seguros y de fianzas, sociedades controladoras de grupos financieros, almacenes generales de depósito, administradoras de fondos para el retiro, arrendadoras financieras, uniones de crédito, sociedades financieras populares, fondos de inversión de renta variable, fondos de inversión en instrumentos de deuda, empresas de factoraje financiero, casas de bolsa, y casas de cambio, que sean residentes en México o en el extranjero. Se considerarán integrantes del sistema financiero a las sociedades financieras de objeto múltiple a las que se refiere la Ley General de Organizaciones y Actividades Auxiliares del Crédito que tengan cuentas y documentos por cobrar derivados de las actividades que deben constituir su objeto social principal, conforme a lo dispuesto en dicha Ley, que representen al menos el 70% de sus activos totales, o bien, que tengan ingresos derivados de dichas actividades y de la enajenación o administración de los créditos otorgados por ellas, que representen al menos el 70% de sus ingresos totales. Para los efectos de la determinación del porcentaje del 70%, no se considerarán los activos o ingresos que deriven de la enajenación a crédito de bienes o servicios de las propias sociedades, de las enajenaciones que se efectúen con cargo a tarjetas de crédito o financiamientos otorgados por terceros.trastorno de ansiedad de la niñez O la adolescencia"
+			stop_words = set(stopwords.words("spanish"))
+			#print("stopwords", stop_words)
+			descripciones = DescriptionS.objects.filter(category_id = 4)
+			#print(type(descripciones))
+			#print (descripciones.count())
+			descAceptadas =[]
+
+			start_time = time.time()
+			concepto1 = ConceptS.objects.filter(active ="1") and ConceptS.objects.filter(category_id ="4")
+			print("concepto1.coun", concepto1.count())
+
+			for i in concepto1[10001:30000]:
+				desc = DescriptionS.objects.filter(conceptid = i.id)
+				for j in desc:
+					#print(j.term)
+					tokens = [t for t in j.term.split()]
+					#tokens = word_tokenize(j.term)
+					filt_tokens = [w.lower() for w in tokens if not w.lower() in stop_words]
+					for k in filt_tokens:
+						TokensProcedures.objects.create(token=k.lower(), id_descripcion=j.id, largo_palabras_termino=len(filt_tokens))
 						descAceptadas.append([k.lower(), j.id, len(filt_tokens)])
 
 

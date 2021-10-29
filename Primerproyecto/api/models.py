@@ -12,3 +12,9 @@ class TokensDiagnosticosFrecuentes(models.Model):
     token = models.CharField(max_length=255)
     id_descripcion = models.CharField(max_length=255)
     largo_palabras_termino = models.IntegerField()
+
+class TokensProcedures(models.Model):
+    #id = models.CharField(max_length=36, primary_key=True)
+    token = models.CharField(max_length=255)
+    id_descripcion = models.CharField(max_length=255)
+    largo_palabras_termino = models.IntegerField()

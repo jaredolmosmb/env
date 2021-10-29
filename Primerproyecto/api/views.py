@@ -9,7 +9,7 @@ from django.db.models import Q
 from Aplicacion1.servicios import generarRequest, normalize, validateJSON
 import json
 import copy
-from api.models import TokensDiagnosticos, TokensDiagnosticosFrecuentes
+from api.models import TokensDiagnosticos, TokensDiagnosticosFrecuentes, TokensProcedures
 from Aplicacion1.servicios import generarRequest, normalize, validateJSON
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
@@ -431,7 +431,12 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 def apiOverview(request):
 	api_urls = {
 		'ProcesarSNOMED Bundle': '/procesarSNOMED/Bundle',
-		'ProcesarSNOMED DiagnosticReport': '/procesarSNOMED/DiagnosticReport'
+		'ProcesarSNOMED DiagnosticReport': '/procesarSNOMED/DiagnosticReport',
+		'ProcesarSNOMED Medication': '/procesarSNOMED/Medication',
+		'ProcesarSNOMED MedicationAdministration': '/procesarSNOMED/MedicationAdministration',
+		'ProcesarSNOMED Procedure': '/procesarSNOMED/Procedure',
+		'ProcesarSNOMED Observation': '/procesarSNOMED/Observation',
+
 	}
 	return Response(api_urls)
 
