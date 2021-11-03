@@ -158,7 +158,7 @@ def ProcesarOracion(frasePrueba, indx, responseMA, responseMA1, start_time):
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'analisisProcedure'
+	recurso = 'cie10'
 
 	if (recurso == 'cie10'):
 		mapeo = ExtendedmaprefsetS.objects.all()
@@ -427,7 +427,7 @@ def InicioView(request):
 			concepto1 = ConceptS.objects.filter(active ="1") and ConceptS.objects.filter(category_id ="4")
 			print("concepto1.coun", concepto1.count())
 
-			for i in concepto1[10001:30000]:
+			for i in concepto1[30001:50000]:
 				desc = DescriptionS.objects.filter(conceptid = i.id)
 				for j in desc:
 					#print(j.term)
