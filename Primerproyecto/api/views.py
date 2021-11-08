@@ -747,8 +747,9 @@ def ProcesarBundleView(request):
  						existe = ConceptosNoEncontrados.objects.filter(concepto = procedimiento).first()
 			 			if not existe:
 			 				ConceptosNoEncontrados.objects.create(concepto = procedimiento)
-		 		for val1 in val['resource']['note']:
-		 			procedimiento = normalize(val1['text'])
+			 	if (val['resource']['note']):
+			 		for val1 in val['resource']['note']:
+			 			procedimiento = normalize(val1['text'])
 		 		print("--- %s seconds Resource Procedure ---" % (time.time() - start_time))
 			 			
 		 	if "Observation" == val['resource']['resourceType']:
@@ -846,7 +847,6 @@ def ProcesarBundleView(request):
 			 					"url" : "codeSNOMED",
 			 					"text" : 0
 			 					} ) 
-	 					ConceptosNoEncontrados.objects.filter
 	 					existe = ConceptosNoEncontrados.objects.filter(concepto = code).first()
 
 			 			if not existe:
