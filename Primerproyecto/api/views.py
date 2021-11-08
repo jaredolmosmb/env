@@ -444,6 +444,7 @@ def apiOverview(request):
 @api_view(['POST'])
 def ProcesarBundleView(request):
 	responseMA = request.data
+	print(responseMA)
 	if (responseMA):
 		recurso = responseMA['resourceType']
 	#print("recurso = ", recurso)
@@ -550,7 +551,7 @@ def ProcesarBundleView(request):
 			 					"url" : "methodSNOMEDInactivo",
 			 					"text" : 0
 			 					}]} ) 
-			 				existe = ConceptosNoEncontrados.objects.get(concepto = metodo)
+			 				existe = ConceptosNoEncontrados.objects.filter(concepto = metodo).first()
 				 			if not existe:
 				 				print("entre en if not existe de administracion con metodo = "+ metodo)
 				 				ConceptosNoEncontrados.objects.create(concepto = metodo)
@@ -602,7 +603,9 @@ def ProcesarBundleView(request):
 			 					"url" : "rutaSNOMED",
 			 					"text" : 0
 			 					} ) 
-		 					existe = ConceptosNoEncontrados.objects.get(concepto = ruta)
+
+		 					existe = ConceptosNoEncontrados.objects.filter(concepto = ruta).first()
+
 				 			if not existe:
 				 				ConceptosNoEncontrados.objects.create(concepto = ruta)
 			 	print("--- %s seconds Resource MedicationAdministration ---" % (time.time() - start_time))
@@ -657,7 +660,7 @@ def ProcesarBundleView(request):
 			 		frasePrueba = val['resource']['conclusion'].lower() 
 			 		#frasePrueba = normalize(val['resource']['conclusion']).lower()
 			 		stop_words = set(stopwords.words("spanish"))
-			 		#frasePrueba = frasePrueba.replace(',', '.')
+			 		frasePrueba = frasePrueba.replace(',', '.')
 			 		tokens_frases = sent_tokenize(frasePrueba)
 			 		print("len(tokens_frases)", len(tokens_frases))
 			 		fraseFinal = ""
@@ -843,7 +846,9 @@ def ProcesarBundleView(request):
 			 					"url" : "codeSNOMED",
 			 					"text" : 0
 			 					} ) 
-	 					existe = ConceptosNoEncontrados.objects.get(concepto = code)
+	 					ConceptosNoEncontrados.objects.filter
+	 					existe = ConceptosNoEncontrados.objects.filter(concepto = code).first()
+
 			 			if not existe:
 			 				ConceptosNoEncontrados.objects.create(concepto = code)
 			 	print("--- %s seconds Resource Observation ---" % (time.time() - start_time))
@@ -914,7 +919,7 @@ def ProcesarDiagnosticReportView(request):
 		 		#frasePrueba = normalize(responseMA['conclusion']).lower()
 		 		frasePrueba = responseMA['conclusion'].lower()
 		 		stop_words = set(stopwords.words("spanish"))
-		 		#frasePrueba = frasePrueba.replace(',', '.')
+		 		frasePrueba = frasePrueba.replace(',', '.')
 		 		tokens_frases = sent_tokenize(frasePrueba)
 		 		#print("len(tokens_frases)", len(tokens_frases))
 		 		#print("tokens_frases", tokens_frases)
@@ -1073,7 +1078,7 @@ def ProcesarMedicationAdministrationView(request):
 		 					}]} ) 
 		 				existe = ConceptosNoEncontrados.objects.filter(concepto = metodo).first()
 			 			if not existe:
-			 				print("entre en if not existe de administracion con metodo = "+ metodo)
+			 				#print("entre en if not existe de administracion con metodo = "+ metodo)
 			 				ConceptosNoEncontrados.objects.create(concepto = metodo)
 
 			if 'dosage' in responseMA:
