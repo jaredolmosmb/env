@@ -1260,16 +1260,11 @@ def ProcesarObservationView(request):
 								 				ConceptosNoEncontrados.objects.create(concepto = categoria)
 
 			if 'code' in responseMA:
-				print("entre a code")
 				if 'coding' in responseMA['code']:
-					print("entre a code.coding")
 					for cod3 in responseMA['code']['coding']:						
 						if 'display' in cod3:
-							print("code.coding.display")
 							if 'system' in cod3:
-								print("code.coding.system")
 								if 'snomed' not in normalize(cod3['system']):
-							 		print("code.coding.system sin snomed")
 							 		code = normalize(cod3['display'])
 							 		descripciones = DescriptionS.objects.filter(term = code)
 							 		sinonimos = Synonyms.objects.filter(term = code)
