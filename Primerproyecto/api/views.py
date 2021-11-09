@@ -610,52 +610,58 @@ def ProcesarBundleView(request):
 				 				ConceptosNoEncontrados.objects.create(concepto = ruta)
 			 	print("--- %s seconds Resource MedicationAdministration ---" % (time.time() - start_time))
 		 	if "DiagnosticReport" == val['resource']['resourceType']:
-		 		if 'conclusionCode' in val['resource']:
-			 		conclusionCode = normalize(val['resource']['conclusionCode'])
-			 		descripciones = DescriptionS.objects.filter(term = conclusionCode) & DescriptionS.objects.filter(category_id = 6)
-			 		sinonimos = Synonyms.objects.filter(term = conclusionCode)
-			 		if descripciones.count() > 1:
-			 			for i in descripciones:
-				 			con = ConceptS.objects.get(id = i.conceptid)
-				 			if con.active == '0':
-				 				descripciones = descripciones.exclude(id=i.id)
-				 	if sinonimos.count() > 1:
-			 			for i in sinonimos:
-				 			con = ConceptS.objects.get(id = i.conceptid)
-				 			if con.active == '0':
-				 				sinonimos = sinonimos.exclude(id=i.id)
-			 		if descripciones:
-			 			concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
-			 			if concepto.active == '1':
-			 				val['resource'].update( {"extension": [{
-			 					"url" : "conclusionCodeSNOMEDActivo",
-			 					"text" : descripciones[0].conceptid
-			 					}]} ) 
-			 			else:
-			 				val['resource'].update( {"extension": [{
-			 					"url" : "conclusionCodeSNOMEDInactivo",
-			 					"text" : descripciones[0].conceptid
-			 					}]} ) 
-			 		elif sinonimos:
-			 			concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
-			 			if concepto.active == '1':
-			 				val['resource'].update( {"extension": [{
-			 					"url" : "conclusionCodeSNOMEDActivo",
-			 					"text" : sinonimos[0].conceptid
-			 					}]} ) 
-			 			else:
-			 				val['resource'].update( {"extension": [{
-			 					"url" : "conclusionCodeSNOMEDInactivo",
-			 					"text" : sinonimos[0].conceptid
-			 					}]} ) 
-			 		else:
-			 			val['resource'].update( {"extension": [{
-			 					"url" : "conclusionCodeSNOMED",
-			 					"text" : 0
-			 					}]} ) 
-			 			existe = ConceptosNoEncontrados.objects.filter(concepto = conclusionCode).first()
-			 			if not existe:
-			 				ConceptosNoEncontrados.objects.create(concepto = conclusionCode)
+		 		if 'conclusionCode' in val['resource']:				
+					if 'coding' in val['resource']['conclusionCode']:					
+						for codD in val['resource']['conclusionCode']['coding']:					
+							if 'display' in codD:						
+								if 'system' in codD:							
+									if 'snomed' not in normalize(codD['system']):					
+							 			conclusionCode = normalize(codD['display'])
+								 		#conclusionCode = normalize(val['resource']['conclusionCode'])
+								 		descripciones = DescriptionS.objects.filter(term = conclusionCode) & DescriptionS.objects.filter(category_id = 6)
+								 		sinonimos = Synonyms.objects.filter(term = conclusionCode)
+								 		if descripciones.count() > 1:
+								 			for i in descripciones:
+									 			con = ConceptS.objects.get(id = i.conceptid)
+									 			if con.active == '0':
+									 				descripciones = descripciones.exclude(id=i.id)
+									 	if sinonimos.count() > 1:
+								 			for i in sinonimos:
+									 			con = ConceptS.objects.get(id = i.conceptid)
+									 			if con.active == '0':
+									 				sinonimos = sinonimos.exclude(id=i.id)
+								 		if descripciones:
+								 			concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
+								 			if concepto.active == '1':
+								 				val['resource'].update( {"extension": [{
+								 					"url" : "conclusionCodeSNOMEDActivo",
+								 					"text" : descripciones[0].conceptid
+								 					}]} ) 
+								 			else:
+								 				val['resource'].update( {"extension": [{
+								 					"url" : "conclusionCodeSNOMEDInactivo",
+								 					"text" : descripciones[0].conceptid
+								 					}]} ) 
+								 		elif sinonimos:
+								 			concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
+								 			if concepto.active == '1':
+								 				val['resource'].update( {"extension": [{
+								 					"url" : "conclusionCodeSNOMEDActivo",
+								 					"text" : sinonimos[0].conceptid
+								 					}]} ) 
+								 			else:
+								 				val['resource'].update( {"extension": [{
+								 					"url" : "conclusionCodeSNOMEDInactivo",
+								 					"text" : sinonimos[0].conceptid
+								 					}]} ) 
+								 		else:
+								 			val['resource'].update( {"extension": [{
+								 					"url" : "conclusionCodeSNOMED",
+								 					"text" : 0
+								 					}]} ) 
+								 			existe = ConceptosNoEncontrados.objects.filter(concepto = conclusionCode).first()
+								 			if not existe:
+								 				ConceptosNoEncontrados.objects.create(concepto = conclusionCode)
 			 	if 'conclusion' in val['resource']:
 			 		frasePrueba = val['resource']['conclusion'].lower() 
 			 		#frasePrueba = normalize(val['resource']['conclusion']).lower()
