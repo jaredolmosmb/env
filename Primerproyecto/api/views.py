@@ -1143,57 +1143,67 @@ def ProcesarProcedureView(request):
 		if (recurso == 'Procedure'):
 			start_time = time.time()
 			if 'code' in responseMA:
-	 			procedimiento = normalize(responseMA['code'])
-	 			descripciones = DescriptionS.objects.filter(term = procedimiento) & DescriptionS.objects.filter(category_id = 4)
-	 			sinonimos = Synonyms.objects.filter(term = procedimiento)
-	 			if descripciones.count() > 1:
-		 			for i in descripciones:
-			 			con = ConceptS.objects.get(id = i.conceptid)
-			 			if con.active == '0':
-			 				descripciones = descripciones.exclude(id=i.id)
-			 			#print(i.term, i.conceptid, con.active)
-			 	if sinonimos.count() > 1:
-		 			for i in sinonimos:
-			 			con = ConceptS.objects.get(id = i.conceptid)
-			 			if con.active == '0':
-			 				sinonimos = sinonimos.exclude(id=i.id)
-			 			#print(i.term, i.conceptid, con.active)
-	 			if descripciones:
-	 				concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
-	 				if concepto.active == '1':
-	 					responseMA.update( {"extension": [{
-	 					"url" : "codeSNOMEDActivo",
-	 					"text" : descripciones[0].conceptid
-	 					}]} ) 
-	 				else:
-	 					responseMA.update( {"extension": [{
-	 					"url" : "codeSNOMEDInactivo",
-	 					"text" : descripciones[0].conceptid
-	 					}]} )
-	 			elif sinonimos:
-	 				concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
-	 				if concepto.active == "1":
-	 					responseMA.update( {"extension": [{
-	 					"url" : "codeSNOMEDActivo",
-	 					"text" : sinonimos[0].conceptid
-	 					}]} )
-	 				else:
-	 					responseMA.update( {"extension": [{
-	 					"url" : "codeSNOMEDInactivo",
-	 					"text" : sinonimos[0].conceptid
-	 					}]} )
-	 			else:
-	 				responseMA .update( {"extension": [{
-	 					"url" : "codeSNOMED",
-	 					"text" : 0
-	 					}]} )
-	 				existe = ConceptosNoEncontrados.objects.filter(concepto = procedimiento).first()
-		 			if not existe:
-		 				ConceptosNoEncontrados.objects.create(concepto = procedimiento)
-			for val1 in responseMA['note']:
-	 			procedimiento = normalize(val1['text'])
+				print("entre code")
+				if 'coding' in responseMA['code']:
+					print("entre code.coding")
+					for codP in responseMA['code']['coding']:						
+						if 'display' in codP:
+							print("entre code.coding.display")
+							if 'system' in codP:
+								print("entre code.coding.system")
+								if 'snomed' not in normalize(codP['system']):
+						 			print("entre code.coding.system sin snomed")
+						 			procedimiento = normalize(cod3['display'])
+						 			descripciones = DescriptionS.objects.filter(term = procedimiento) & DescriptionS.objects.filter(category_id = 4)
+						 			sinonimos = Synonyms.objects.filter(term = procedimiento)
+						 			if descripciones.count() > 1:
+							 			for i in descripciones:
+								 			con = ConceptS.objects.get(id = i.conceptid)
+								 			if con.active == '0':
+								 				descripciones = descripciones.exclude(id=i.id)
+								 			#print(i.term, i.conceptid, con.active)
+								 	if sinonimos.count() > 1:
+							 			for i in sinonimos:
+								 			con = ConceptS.objects.get(id = i.conceptid)
+								 			if con.active == '0':
+								 				sinonimos = sinonimos.exclude(id=i.id)
+								 			#print(i.term, i.conceptid, con.active)
+						 			if descripciones:
+						 				concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
+						 				if concepto.active == '1':
+						 					responseMA.update( {"extension": [{
+						 					"url" : "codeSNOMEDActivo",
+						 					"text" : descripciones[0].conceptid
+						 					}]} ) 
+						 				else:
+						 					responseMA.update( {"extension": [{
+						 					"url" : "codeSNOMEDInactivo",
+						 					"text" : descripciones[0].conceptid
+						 					}]} )
+						 			elif sinonimos:
+						 				concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
+						 				if concepto.active == "1":
+						 					responseMA.update( {"extension": [{
+						 					"url" : "codeSNOMEDActivo",
+						 					"text" : sinonimos[0].conceptid
+						 					}]} )
+						 				else:
+						 					responseMA.update( {"extension": [{
+						 					"url" : "codeSNOMEDInactivo",
+						 					"text" : sinonimos[0].conceptid
+						 					}]} )
+						 			else:
+						 				responseMA .update( {"extension": [{
+						 					"url" : "codeSNOMED",
+						 					"text" : 0
+						 					}]} )
+						 				existe = ConceptosNoEncontrados.objects.filter(concepto = procedimiento).first()
+							 			if not existe:
+							 				ConceptosNoEncontrados.objects.create(concepto = procedimiento)
 			print("--- %s seconds Resource Procedure ---" % (time.time() - start_time))
 			return Response(responseMA)
+		else:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
 	else:
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -1312,7 +1322,9 @@ def ProcesarObservationView(request):
 							 			existe = ConceptosNoEncontrados.objects.filter(concepto = code).first()
 							 			if not existe:
 							 				ConceptosNoEncontrados.objects.create(concepto = code)
-									 	print("--- %s seconds Resource Observation ---" % (time.time() - start_time))
+			print("--- %s seconds Resource Observation ---" % (time.time() - start_time))
 			return Response(responseMA)
+		else:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
 	else:
 		return Response(status=status.HTTP_400_BAD_REQUEST)
