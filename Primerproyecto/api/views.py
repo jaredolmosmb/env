@@ -1142,17 +1142,12 @@ def ProcesarProcedureView(request):
 		recurso = responseMA['resourceType']
 		if (recurso == 'Procedure'):
 			start_time = time.time()
-			if 'code' in responseMA:
-				print("entre code")
-				if 'coding' in responseMA['code']:
-					print("entre code.coding")
-					for codP in responseMA['code']['coding']:						
-						if 'display' in codP:
-							print("entre code.coding.display")
-							if 'system' in codP:
-								print("entre code.coding.system")
-								if 'snomed' not in normalize(codP['system']):
-						 			print("entre code.coding.system sin snomed")
+			if 'code' in responseMA:				
+				if 'coding' in responseMA['code']:					
+					for codP in responseMA['code']['coding']:					
+						if 'display' in codP:						
+							if 'system' in codP:							
+								if 'snomed' not in normalize(codP['system']):					
 						 			procedimiento = normalize(cod3['display'])
 						 			descripciones = DescriptionS.objects.filter(term = procedimiento) & DescriptionS.objects.filter(category_id = 4)
 						 			sinonimos = Synonyms.objects.filter(term = procedimiento)
