@@ -4,5 +4,12 @@
         "use" : "oficial",
         "value" : "M002"
          }], 
-  "code" : "ácido fólico"
+  "code": {
+        "coding": [ {
+          "system": "http://snomed.info/sct",
+          "code": "7947003",
+          "display": "aspirina"
+        } ],
+        "text": "Medication Reconciliation (procedure)"
+      }
 }
