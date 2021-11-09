@@ -11,8 +11,6 @@ def normalize(s):
 	if type(s) == str:
 
 		for a, b in replacements:
-			print("s", s)
-			print("type(s)", type(s))
 			s = s.replace(a, b).replace(a.upper(), b.upper())
 		return s
 	else:
