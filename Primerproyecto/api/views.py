@@ -865,54 +865,58 @@ def ProcesarDiagnosticReportView(request):
 		recurso = responseMA['resourceType']
 		if (recurso == 'DiagnosticReport'):
 			start_time = time.time()
-			if 'conclusionCode' in responseMA:
-		 		conclusionCode = normalize(responseMA['conclusionCode'])
-		 		print("conclusionCode", conclusionCode)
-		 		descripciones = DescriptionS.objects.filter(term = conclusionCode) & DescriptionS.objects.filter(category_id = 6)
-		 		sinonimos = Synonyms.objects.filter(term = conclusionCode)
-		 		if descripciones.count() > 1:
-		 			for i in descripciones:
-			 			con = ConceptS.objects.get(id = i.conceptid)
-			 			if con.active == '0':
-			 				descripciones = descripciones.exclude(id=i.id)
-			 	if sinonimos.count() > 1:
-		 			for i in sinonimos:
-			 			con = ConceptS.objects.get(id = i.conceptid)
-			 			if con.active == '0':
-			 				sinonimos = sinonimos.exclude(id=i.id)
-		 		if descripciones:
-		 			concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
-		 			if concepto.active == '1':
-		 				responseMA.update( {"extension": [{
-		 					"url" : "conclusionCodeSNOMEDActivo",
-		 					"text" : descripciones[0].conceptid
-		 					}]} ) 
-		 			else:
-		 				responseMA.update( {"extension": [{
-		 					"url" : "conclusionCodeSNOMEDInactivo",
-		 					"text" : descripciones[0].conceptid
-		 					}]} ) 
-		 		elif sinonimos:
-		 			concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
-		 			if concepto.active == '1':
-		 				responseMA.update( {"extension": [{
-		 					"url" : "conclusionCodeSNOMEDActivo",
-		 					"text" : sinonimos[0].conceptid
-		 					}]} ) 
-		 			else:
-		 				responseMA.update( {"extension": [{
-		 					"url" : "conclusionCodeSNOMEDInactivo",
-		 					"text" : sinonimos[0].conceptid
-		 					}]} ) 
-		 		else:
-		 			responseMA.update( {"extension": [{
-		 					"url" : "conclusionCodeSNOMED",
-		 					"text" : 0
-		 					}]} ) 
-		 			if conclusionCode != "":	 				
-			 			existe = ConceptosNoEncontrados.objects.filter(concepto = conclusionCode).first()
-			 			if not existe:
-			 				ConceptosNoEncontrados.objects.create(concepto = conclusionCode)
+			if 'conclusionCode' in responseMA:				
+				if 'coding' in responseMA['conclusionCode']:					
+					for codD in responseMA['conclusionCode']['coding']:					
+						if 'display' in codD:						
+							if 'system' in codD:							
+								if 'snomed' not in normalize(codD['system']):					
+						 			conclusionCode = normalize(codD['display'])
+							 		descripciones = DescriptionS.objects.filter(term = conclusionCode) & DescriptionS.objects.filter(category_id = 6)
+							 		sinonimos = Synonyms.objects.filter(term = conclusionCode)
+							 		if descripciones.count() > 1:
+							 			for i in descripciones:
+								 			con = ConceptS.objects.get(id = i.conceptid)
+								 			if con.active == '0':
+								 				descripciones = descripciones.exclude(id=i.id)
+								 	if sinonimos.count() > 1:
+							 			for i in sinonimos:
+								 			con = ConceptS.objects.get(id = i.conceptid)
+								 			if con.active == '0':
+								 				sinonimos = sinonimos.exclude(id=i.id)
+							 		if descripciones:
+							 			concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
+							 			if concepto.active == '1':
+							 				responseMA.update( {"extension": [{
+							 					"url" : "conclusionCodeSNOMEDActivo",
+							 					"text" : descripciones[0].conceptid
+							 					}]} ) 
+							 			else:
+							 				responseMA.update( {"extension": [{
+							 					"url" : "conclusionCodeSNOMEDInactivo",
+							 					"text" : descripciones[0].conceptid
+							 					}]} ) 
+							 		elif sinonimos:
+							 			concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
+							 			if concepto.active == '1':
+							 				responseMA.update( {"extension": [{
+							 					"url" : "conclusionCodeSNOMEDActivo",
+							 					"text" : sinonimos[0].conceptid
+							 					}]} ) 
+							 			else:
+							 				responseMA.update( {"extension": [{
+							 					"url" : "conclusionCodeSNOMEDInactivo",
+							 					"text" : sinonimos[0].conceptid
+							 					}]} ) 
+							 		else:
+							 			responseMA.update( {"extension": [{
+							 					"url" : "conclusionCodeSNOMED",
+							 					"text" : 0
+							 					}]} ) 
+							 			if conclusionCode != "":	 				
+								 			existe = ConceptosNoEncontrados.objects.filter(concepto = conclusionCode).first()
+								 			if not existe:
+								 				ConceptosNoEncontrados.objects.create(concepto = conclusionCode)
 			if 'conclusion' in responseMA:
 		 		#frasePrueba = normalize(responseMA['conclusion']).lower()
 		 		frasePrueba = responseMA['conclusion'].lower()
@@ -955,6 +959,8 @@ def ProcesarDiagnosticReportView(request):
 		 		responseMA.update( {"conclusion": fraseFinal} )
 			print("--- %s seconds Resource DiagnosticReport alone ---" % (time.time() - start_time))	
 			return Response(responseMA)
+		else:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
 	else:
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 

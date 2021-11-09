@@ -5,5 +5,11 @@
  		"use" : "oficial",
   		"value" : "D001"
   		 }],
-  "conclusionCode" : "dolor de cabeza"
+  "conclusionCode": {
+        "coding": [ {
+          "system": "http://.info/sct",
+          "code": "7947003",
+          "display": "dolor de cabeza"
+        } ]
+      }
 }
