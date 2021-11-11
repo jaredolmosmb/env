@@ -761,7 +761,7 @@ def ProcesarBundleView(request):
 		 				if 'text' in categ:
 		 					categoria = normalize(categ['text'])
 		 					#categoria = normalize(val['resource']['category'].encode("latin-1").decode("utf-8"))
-							categoria = normalize(cod['display'])
+							#categoria = normalize(cod['display'])
 					 		#categoria = normalize(val['resource']['category'].encode("latin-1").decode("utf-8"))
 					 		#categoria = normalize(val['resource']['category'])
 					 		descripciones = DescriptionS.objects.filter(term = categoria)
@@ -852,10 +852,16 @@ def ProcesarBundleView(request):
 				 					"text" : sinonimos[0].conceptid
 				 					} ) 
 		 				else:
-		 					val['resource']['extension'].append({
-				 					"url" : "codeSNOMED",
-				 					"text" : 0
-				 					} ) 
+		 					if 'extension' not in val['resource']:
+		 						val['resource'].update( {"extension": [{
+					 					"url" : "codeSNOMED",
+					 					"text" : 0
+					 					}]} )
+		 					else:
+		 						val['resource']['extension'].append({
+					 					"url" : "codeSNOMED",
+					 					"text" : 0
+					 					} ) 
 		 					existe = ConceptosNoEncontrados.objects.filter(concepto = code).first()
 
 				 			if not existe:
@@ -1219,7 +1225,7 @@ def ProcesarObservationView(request):
 			if 'category' in responseMA:
 				for categ in responseMA['category']:
 					if 'text' in categ:
-						categoria = normalize(categ['text'])
+					 	categoria = normalize(categ['text'])
 						#categoria = normalize(cod['display'])
 				 		descripciones = DescriptionS.objects.filter(term = categoria)
 				 		sinonimos = Synonyms.objects.filter(term = categoria)
@@ -1270,22 +1276,22 @@ def ProcesarObservationView(request):
 			if 'code' in responseMA:
 				if 'text' in responseMA['code']:
 					code = normalize(responseMA['code']['text'])
-					code = normalize(cod3['display'])
-			 		descripciones = DescriptionS.objects.filter(term = code)
-			 		sinonimos = Synonyms.objects.filter(term = code)
-			 		if descripciones.count() > 1:
+					#code = normalize(cod3['display'])
+					descripciones = DescriptionS.objects.filter(term = code)
+					sinonimos = Synonyms.objects.filter(term = code)
+					if descripciones.count() > 1:
 			 			for i in descripciones:
 				 			con = ConceptS.objects.get(id = i.conceptid)
 				 			if con.active == '0':
 				 				descripciones = descripciones.exclude(id=i.id)
 				 			#print(i.term, i.conceptid, con.active)
-				 	if sinonimos.count() > 1:
+					if sinonimos.count() > 1:
 			 			for i in sinonimos:
 				 			con = ConceptS.objects.get(id = i.conceptid)
 				 			if con.active == '0':
 				 				sinonimos = sinonimos.exclude(id=i.id)
 				 			#print(i.term, i.conceptid, con.active)
-				 	if descripciones:
+					if descripciones:
 			 			concepto = ConceptS.objects.get(id = descripciones[0].conceptid)
 			 			if concepto.active == '1':
 			 				responseMA['extension'].append({
@@ -1297,7 +1303,7 @@ def ProcesarObservationView(request):
 			 					"url" : "codeSNOMEDInactivo",
 			 					"text" : descripciones[0].conceptid
 			 					} ) 
-			 		elif sinonimos:
+					elif sinonimos:
 			 			concepto = ConceptS.objects.get(id = sinonimos[0].conceptid)
 			 			if concepto.active == '1':
 			 				responseMA['extension'].append({
@@ -1309,13 +1315,19 @@ def ProcesarObservationView(request):
 			 					"url" : "codeSNOMEDInactivo",
 			 					"text" : sinonimos[0].conceptid
 			 					} ) 
-			 		else:
-			 			responseMA['extension'].append({
+					else:
+						if 'extension' not in responseMA:
+							responseMA.update( {"extension": [{
+				 					"url" : "codeSNOMED",
+				 					"text" : 0
+				 					}]} )
+						else:
+							responseMA['extension'].append({
 			 					"url" : "codeSNOMED",
 			 					"text" : 0
-			 					} ) 
-			 			existe = ConceptosNoEncontrados.objects.filter(concepto = code).first()
-			 			if not existe:
+			 					} )
+						existe = ConceptosNoEncontrados.objects.filter(concepto = code).first()
+						if not existe:
 			 				ConceptosNoEncontrados.objects.create(concepto = code)
 			print("--- %s seconds Resource Observation ---" % (time.time() - start_time))
 			return Response(responseMA)

@@ -31,7 +31,8 @@
           "system": "http://terminology.hl7.org/CodeSystem/observation-category",
           "code": "vital-signs",
           "display": "vital-signs"
-        } ]
+        } ],
+        "text": "Vital Signs"
       } ],
       "code": {
         "coding": [ {
