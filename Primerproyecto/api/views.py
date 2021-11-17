@@ -40,7 +40,6 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	#print("doc", doc)
 	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
 	#print("sub_toks", sub_toks) 
-
 	
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
 	#print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
@@ -48,7 +47,6 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	#tokens_palabras = [w for w in tokens_palabras if not w in sub_toks]
 	filt_frasePrueba = [w for w in tokens_palabras if not w in stop_words]# se quitan las stopwords de los tokens(palabras)
 	#print("--- %s seconds etapa 2 ---" % (time.time() - start_time))
-
 
 	# ---------GENERAR LISTA ANIDADA POR CADA TOKEN = [ID_DESCRIPCION, LARGO_PALABRAS]
 	id_terminos_de_token=[]
@@ -63,7 +61,6 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				id_terminos_de_token[indx].append([int(j.id_descripcion), j.largo_palabras_termino])#añado id de la descripcion que continee el token de la frase
 	max=0
 	#print("--- %s seconds etapa 3 ---" % (time.time() - start_time))
-
 
 	# ---------ELIMINAR DESCRIPCIONES QUE TENGAN MAS PALABRAS QUE LA DE LA FRASE A PROCESAR, ORDENAR CADA LISTA ANIDADA DE CADA TOKEN DE LARGO DE PALABRAS EN DESCRIPCION DE MANERA DESCENDENTE
 	for term in id_terminos_de_token:
@@ -96,7 +93,6 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 
 	#print("--- %s seconds etapa 5 ---" % (time.time() - start_time))
 
-
 	# ---------ELIMINAR REPETIDOS GENERADOS EN EL PROCESO INMEDIATO ANTERIOR
 	#termino_correcto2 = copy.deepcopy(termino_correcto)
 	termino_correct_sin_repetido=[]
@@ -105,7 +101,6 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 			termino_correct_sin_repetido.append(term[0])
 	#print("--- %s seconds etapa 6 ---" % (time.time() - start_time))
 
-
 	# ---------EXTRAER CONCEPTOS DE ACUARDO A LAS DESCRIPCIONES
 	conceptos = []
 	for term in termino_correct_sin_repetido:
@@ -113,7 +108,6 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 		conceptos.append([desc[0].conceptid, ])
 	data=""
 	#print("--- %s seconds etapa 7 ---" % (time.time() - start_time))
-
 
 	#---------VERIFICACION SI EL ORDEN DE PALABRAS EN LA DESCRIPCION Y FRASE ESTA TAL CUAL DE MANERA VCONSECUTIVA
 	BooleanTalCual =[]
@@ -127,7 +121,6 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				indice_inicial = str(frasePrueba).lower().find(str(descripcion.term).lower())
 				indice_final = indice_inicial + len(descripcion.term)
 				descSeguncon.append([descripcion.term, conc[0], indice_inicial, indice_final, len(descripcion.term)])
-
 		BooleanTalCual.append(esta)
 	
 	conceptos2 = []

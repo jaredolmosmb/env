@@ -196,10 +196,6 @@ def InicioView(request):
 
 		print(lista_categorias)
 		print("cont6, cont13, cont15, cont1, cont16, cont5", cont6, cont13, cont15, cont1, cont16, cont5)
-
-
-        
-
 	if (recurso == 'analisisDiagnosticoF'):
 		start_time = time.time()
 		with open("TextoLibreDiagnostico.json", "r") as read_file:
@@ -403,7 +399,6 @@ def InicioView(request):
 			responseMA ={"status": "json invalido"}
 			responseMA1 = copy.deepcopy(responseMA)
 			data=""
-
 	if (recurso == 'analisisProcedure'):
 		with open("TextoLibreAdministracion.json", "r") as read_file:
 			try:
@@ -455,7 +450,6 @@ def InicioView(request):
 			responseMA ={"status": "json invalido"}
 			responseMA1 = copy.deepcopy(responseMA)
 			data=""
-
 	if (recurso == 'analisisAdministracion'):
 		with open("TextoLibreAdministracion.json", "r") as read_file:
 			try:
@@ -516,7 +510,6 @@ def InicioView(request):
 			responseMA ={"status": "json invalido"}
 			responseMA1 = copy.deepcopy(responseMA)
 			data=""
-
 	if (recurso == 'medicamento'):
 		"""
 		# recibir json de servidor
@@ -569,9 +562,6 @@ def InicioView(request):
 			responseMA ={"status": "json invalido"}
 			responseMA1 = copy.deepcopy(responseMA)
 			data=""
-	
-
-		
 	if (recurso == 'administracion'):
 		"""
 		# recibir json de servidor
@@ -648,7 +638,6 @@ def InicioView(request):
 			responseMA ={"status": "json invalido"}
 			responseMA1 = copy.deepcopy(responseMA)
 			data=""
-
 	if (recurso == 'diagnostico'):
 		"""
 		# recibir json de servidor
@@ -699,7 +688,6 @@ def InicioView(request):
 			responseMA ={"status": "json invalido"}
 			responseMA1 = copy.deepcopy(responseMA)
 			data=""
-
 	if (recurso == 'procedimiento'):
 		"""
 		# recibir json de servidor
@@ -826,7 +814,6 @@ def InicioView(request):
  			responseMA ={"status": "json invalido"}
 		 	responseMA1 = copy.deepcopy(responseMA)
 		 	data=""
-
 	if (recurso == 'bundle'):
 
 		 with open("bundle.json", "r") as read_file:
