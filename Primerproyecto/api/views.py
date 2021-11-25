@@ -608,7 +608,6 @@ def ProcesarBundleView(request):
 		 		if 'conclusionCode' in val['resource']:
 		 			if 'text' in val['resource']['conclusionCode']:
 		 				conclusionCode = normalize(val['resource']['conclusionCode']['text'])
-				 		#conclusionCode = normalize(val['resource']['conclusionCode'])
 				 		descripciones = DescriptionS.objects.filter(term = conclusionCode) & DescriptionS.objects.filter(category_id = 6)
 				 		sinonimos = Synonyms.objects.filter(term = conclusionCode)
 				 		if descripciones.count() > 1:
@@ -655,7 +654,6 @@ def ProcesarBundleView(request):
 				 				ConceptosNoEncontrados.objects.create(concepto = conclusionCode)
 			 	if 'conclusion' in val['resource']:
 			 		frasePrueba = val['resource']['conclusion'].lower() 
-			 		#frasePrueba = normalize(val['resource']['conclusion']).lower()
 			 		stop_words = set(stopwords.words("spanish"))
 			 		frasePrueba = frasePrueba.replace(',', '.')
 			 		tokens_frases = sent_tokenize(frasePrueba)
