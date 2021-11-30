@@ -348,7 +348,7 @@ def InicioView(request):
 			responseMA1 = copy.deepcopy(responseMA)
 			data=""
 			"""
-	if (recurso == 'analisisDiagnostico'):
+	if (recurso == 'TokensDiagnosticos'):
 		with open("TextoLibreAdministracion.json", "r") as read_file:
 			try:
 				responseMA = json.load(read_file)
@@ -367,7 +367,7 @@ def InicioView(request):
 			concepto1 = ConceptS.objects.filter(active ="1") and ConceptS.objects.filter(category_id ="6")
 			print("concepto1.coun", concepto1.count())
 
-			for i in concepto1[110001:115484]:
+			for i in concepto1[0:115484]:
 				desc = DescriptionS.objects.filter(conceptid = i.id)
 				for j in desc:
 					#print(j.term)
