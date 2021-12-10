@@ -14,6 +14,7 @@ import nltk
 import time
 import es_core_news_sm
 import spacy
+from spacy import displacy
 from negspacy.negation import Negex
 
 
@@ -31,7 +32,66 @@ def Sort(sub_li):
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'TokensDiagnosticos'
+	recurso = 'PruebaPOS'
+
+	if (recurso == 'PruebaPOS'):
+		with open("TextoLibreAdministracion.json", "r") as read_file:
+			try:
+				responseMA = json.load(read_file)
+				responseMA1 = copy.deepcopy(responseMA)
+				#print("valido")
+				isValid = True
+			except ValueError as err:
+				#print("invalido")
+				isValid = False
+		if isValid:
+			stop_words = set(stopwords.words("spanish"))
+			start_time = time.time()
+			nlp = spacy.load('es_core_news_sm')
+			frase = "El paciente está orientado en tiempo y lugar"
+			print("frase: ", frase)
+			document = nlp(frase)
+			print("document", document)
+			print("type(document)", type(document))
+			prev_prev_el = ""
+			prev_el=""
+			ele=""
+			for index, token in enumerate(list(document)):
+				if index == 0 or index == 1:
+					continue
+				#if (index+2 < len(list(document)[::])):
+				#	prev_el = str(list(document)[::][index-1])
+				#	prev_prev_el = str(list(document)[::][index-2])
+				#	ele = str(list(document)[::][index])
+				#print("prev_prev_el: "+ prev_prev_el+ ", "+document[::][index-2].pos_)
+				#print("prev_el: ", prev_el+ ", "+document[::][index-1].pos_)
+				#print("elemento: ", ele+ ", "+document[::][index].pos_)
+				#print()
+
+				if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN":
+					print("aqui")
+				
+				if index+2 < len(list(document)):
+					
+					if document[::][index+1].pos_ == "CCONJ" and document[::][index+2].pos_ == "NOUN":
+						print("entre aqui 2")
+						frase_nueva = str(list(document)[::][index-2])+ " "+str(list(document)[::][index-1]) + " "+ str(list(document)[::][index+2])
+						print("frase_nueva", frase_nueva)
+
+
+
+
+
+				print(token.lemma_, token.pos_, token.dep_)
+			#displacy.serve(document, style='ent')
+			print("--- %s seconds ---" % (time.time() - start_time))
+
+			data = "doc"
+
+		else:
+			responseMA ={"status": "json invalido"}
+			responseMA1 = copy.deepcopy(responseMA)
+			data=""
 
 	if (recurso == 'TokensDiagnosticos'):
 		with open("TextoLibreAdministracion.json", "r") as read_file:
