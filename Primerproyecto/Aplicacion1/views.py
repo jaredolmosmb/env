@@ -32,10 +32,7 @@ def Preprocesamiento(la_frase):
 	nlp = spacy.load('es_core_news_sm')
 	#frase = "El paciente está orientado en tiempo y lugar"
 	frase = la_frase
-	print("frase: ", frase)
 	document = nlp(frase)
-	print("document", document)
-	print("type(document)", type(document))
 	prev_prev_el = ""
 	prev_el=""
 	ele=""
@@ -57,27 +54,24 @@ def Preprocesamiento(la_frase):
 
 		if index+2 < len(list(document)):
 			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].pos_ == "CCONJ" and document[::][index+2].pos_ == "NOUN":
-				print("aqui")
-				print("entre aqui 2")
 				adjective = str(list(document)[::][index-2])
 				adposition = str(list(document)[::][index-1])
 				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
-				print("frase_nueva", frase_nueva)
+
 				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
-				print ("indice_frase_original", indice_frase_original)
+	
 				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
-				print("frase despues del reemplazo", frase)
+
 			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].lemma_ == "," and document[::][index+2].pos_ == "NOUN":
-				print("aqui2")
-				print("entre aqui2 2")
+				
 				adjective = str(list(document)[::][index-2])
 				adposition = str(list(document)[::][index-1])
 				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
-				print("frase_nueva", frase_nueva)
+	
 				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
-				print ("indice_frase_original", indice_frase_original)
+		
 				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
-				print("frase despues del reemplazo", frase)
+
 	return frase
 
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
@@ -102,8 +96,6 @@ def InicioView(request):
 			#frase = "El paciente está orientado en tiempo y lugar"
 			frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
 			frase2 = ""
-			checar = frase == frase2
-			print("frase es igual a frase2", checar)
 
 			while(frase != frase2):
 				if frase2 == "":					
@@ -114,6 +106,8 @@ def InicioView(request):
 				else:
 					frase = copy.deepcopy(frase2)
 					frase2 = Preprocesamiento(frase)
+
+			print("la frase final es :", frase2)
 
 
 			data = "doc"

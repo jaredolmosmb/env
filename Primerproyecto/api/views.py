@@ -31,6 +31,43 @@ def Sort_4(sub_li):
 	sub_li.sort(key = lambda x: x[4],reverse=True)
 	return sub_li
 
+def Preprocesamiento(la_frase):
+	nlp = spacy.load('es_core_news_sm')
+	#frase = "El paciente está orientado en tiempo y lugar"
+	frase = la_frase
+	document = nlp(frase)
+	prev_prev_el = ""
+	prev_el=""
+	ele=""
+
+	
+
+	for index, token in enumerate(list(document)):
+		if index == 0 or index == 1:
+			continue
+	
+		if index+2 < len(list(document)):
+			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].pos_ == "CCONJ" and document[::][index+2].pos_ == "NOUN":
+				adjective = str(list(document)[::][index-2])
+				adposition = str(list(document)[::][index-1])
+				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
+
+				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
+	
+				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
+
+			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].lemma_ == "," and document[::][index+2].pos_ == "NOUN":
+				
+				adjective = str(list(document)[::][index-2])
+				adposition = str(list(document)[::][index-1])
+				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
+	
+				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
+		
+				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
+
+	return frase
+
 def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
 	stop_words = set(stopwords.words("spanish"))
@@ -149,7 +186,8 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 						descSeguncon.remove(elitem2)
 
 	for itemotro in descSeguncon:
-		conceptos3.append([itemotro[1]] )
+		if itemotro[1] not in conceptos3:
+			conceptos3.append(itemotro[1] )
 	frasePrueba2=""
 
 	aumento=0
@@ -159,7 +197,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	# ---------AÑADIR ENTRE GUIONES MEDIOS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	conta = 0
 	for indxconc3, conc3 in enumerate(conceptos3):
-		descripciones = DescriptionS.objects.filter(conceptid = str(conc3[0]))
+		descripciones = DescriptionS.objects.filter(conceptid = str(conc3))
 		for descripcion in descripciones:
 			if str(descripcion.term).lower() in str(frasePrueba).lower():
 				conta=conta+1
@@ -168,8 +206,8 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				indice_inicial = str(frasePrueba2).lower().find(str(descripcion.term).lower())
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
-				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
-				frasePrueba2 = frasePrueba2[:(indice_final)] + ' —'+FSN.term+'—' + frasePrueba2[(indice_final):]
+				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
+				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.term+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
 
 
@@ -180,12 +218,12 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				if "extension" not in val['resource']:
 					val['resource'].update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					}]} )
 				else:
 					val['resource']["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					} )
 	else:
 		if len(conceptos3) >= 1:
@@ -193,12 +231,12 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				if "extension" not in val:
 					val.update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					}]} )
 				else:
 					val["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					} )
 	#-----------Guardar tokens de los conceptos encontrados en la frase
 	descAceptadas=[]
@@ -346,7 +384,8 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 						descSeguncon.remove(elitem2)
 
 	for itemotro in descSeguncon:
-		conceptos3.append([itemotro[1]] )
+		if itemotro[1] not in conceptos3:
+			conceptos3.append(itemotro[1] )
 	frasePrueba2=""
 
 	aumento=0
@@ -355,8 +394,9 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 
 	# ---------AÑADIR ENTRE GUIONES MEDIOS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	conta = 0
+
 	for indxconc3, conc3 in enumerate(conceptos3):
-		descripciones = DescriptionS.objects.filter(conceptid = str(conc3[0]))
+		descripciones = DescriptionS.objects.filter(conceptid = str(conc3))
 		for descripcion in descripciones:
 			if str(descripcion.term).lower() in str(frasePrueba).lower():
 				conta=conta+1
@@ -365,8 +405,8 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				indice_inicial = str(frasePrueba2).lower().find(str(descripcion.term).lower())
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
-				FSN = DescriptionS.objects.get(conceptid = str(conc3[0]), typeid = "900000000000003001", active = "1")
-				frasePrueba2 = frasePrueba2[:(indice_final)] + ' —'+FSN.term+'—' + frasePrueba2[(indice_final):]
+				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
+				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.term+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 bd frecuentes---" % (time.time() - start_time))
 
 
@@ -378,12 +418,12 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				if "extension" not in val['resource']:
 					val['resource'].update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					}]} )
 				else:
 					val['resource']["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					} )
 	else:
 		if len(conceptos3) >= 1:
@@ -391,12 +431,12 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				if "extension" not in val:
 					val.update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					}]} )
 				else:
 					val["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item[0]
+					"text" : item
 					} )
 
 	#-----------Guardar tokens de los conceptos encontrados en la frase
@@ -655,7 +695,25 @@ def ProcesarBundleView(request):
 			 	if 'conclusion' in val['resource']:
 			 		frasePrueba = val['resource']['conclusion'].lower() 
 			 		stop_words = set(stopwords.words("spanish"))
-			 		#frasePrueba = frasePrueba.replace(',', '.')
+			 		
+			 		#frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
+			 		frase2 = ""
+
+			 		while(frasePrueba != frase2):
+			 			if frase2 == "":					
+			 				print("frase inicial: ", frasePrueba)
+			 				frase2 = Preprocesamiento(frasePrueba)
+			 				print("frase2", frase2)
+			 				print("--- %s seconds ---" % (time.time() - start_time))
+			 			else:
+			 				frasePrueba = copy.deepcopy(frase2)
+			 				frase2 = Preprocesamiento(frasePrueba)
+
+			 		print("la frase final es :", frase2)
+			 		frasePrueba = copy.deepcopy(frase2)
+			 		
+			 		print("frasePrueba = ", frasePrueba)
+			 		frasePrueba = frasePrueba.replace(',', '.')
 			 		tokens_frases = sent_tokenize(frasePrueba)
 			 		print("len(tokens_frases)", len(tokens_frases))
 			 		fraseFinal = ""

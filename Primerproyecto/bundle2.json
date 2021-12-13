@@ -85,7 +85,25 @@
                             "use" : "oficial",
                             "value" : "D002"
                              }],
-                      "conclusion" : "Paciente el cual lo encontramos en posicion semiflower. con posicion libremente escogida. neurologicamente consciente, orientado en tiempo."
+                      "conclusion" : " Paciente el cual lo encontramos orientado en espacio, orientado en tiempo y orientado en lugar."
+                    }
+        }
+    ]
+}
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : " Paciente el cual lo encontramos orientado en tiempo, espacio y lugar."
                     }
         }
     ]
