@@ -28,6 +28,57 @@ def Sort(sub_li):
 	sub_li.sort(key = lambda x: x[1],reverse=True)
 	return sub_li
 
+def Preprocesamiento(la_frase):
+	nlp = spacy.load('es_core_news_sm')
+	#frase = "El paciente está orientado en tiempo y lugar"
+	frase = la_frase
+	print("frase: ", frase)
+	document = nlp(frase)
+	print("document", document)
+	print("type(document)", type(document))
+	prev_prev_el = ""
+	prev_el=""
+	ele=""
+
+	for index, token in enumerate(list(document)):
+		print(token.lemma_, token.pos_, token.dep_)
+
+	for index, token in enumerate(list(document)):
+		if index == 0 or index == 1:
+			continue
+		#if (index+2 < len(list(document)[::])):
+		#	prev_el = str(list(document)[::][index-1])
+		#	prev_prev_el = str(list(document)[::][index-2])
+		#	ele = str(list(document)[::][index])
+		#print("prev_prev_el: "+ prev_prev_el+ ", "+document[::][index-2].pos_)
+		#print("prev_el: ", prev_el+ ", "+document[::][index-1].pos_)
+		#print("elemento: ", ele+ ", "+document[::][index].pos_)
+		#print()
+
+		if index+2 < len(list(document)):
+			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].pos_ == "CCONJ" and document[::][index+2].pos_ == "NOUN":
+				print("aqui")
+				print("entre aqui 2")
+				adjective = str(list(document)[::][index-2])
+				adposition = str(list(document)[::][index-1])
+				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
+				print("frase_nueva", frase_nueva)
+				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
+				print ("indice_frase_original", indice_frase_original)
+				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
+				print("frase despues del reemplazo", frase)
+			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].lemma_ == "," and document[::][index+2].pos_ == "NOUN":
+				print("aqui2")
+				print("entre aqui2 2")
+				adjective = str(list(document)[::][index-2])
+				adposition = str(list(document)[::][index-1])
+				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
+				print("frase_nueva", frase_nueva)
+				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
+				print ("indice_frase_original", indice_frase_original)
+				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
+				print("frase despues del reemplazo", frase)
+	return frase
 
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
 def InicioView(request):
@@ -48,43 +99,22 @@ def InicioView(request):
 			stop_words = set(stopwords.words("spanish"))
 			start_time = time.time()
 			nlp = spacy.load('es_core_news_sm')
-			frase = "El paciente está orientado en tiempo y lugar"
-			print("frase: ", frase)
-			document = nlp(frase)
-			print("document", document)
-			print("type(document)", type(document))
-			prev_prev_el = ""
-			prev_el=""
-			ele=""
-			for index, token in enumerate(list(document)):
-				if index == 0 or index == 1:
-					continue
-				#if (index+2 < len(list(document)[::])):
-				#	prev_el = str(list(document)[::][index-1])
-				#	prev_prev_el = str(list(document)[::][index-2])
-				#	ele = str(list(document)[::][index])
-				#print("prev_prev_el: "+ prev_prev_el+ ", "+document[::][index-2].pos_)
-				#print("prev_el: ", prev_el+ ", "+document[::][index-1].pos_)
-				#print("elemento: ", ele+ ", "+document[::][index].pos_)
-				#print()
+			#frase = "El paciente está orientado en tiempo y lugar"
+			frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
+			frase2 = ""
+			checar = frase == frase2
+			print("frase es igual a frase2", checar)
 
-				if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN":
-					print("aqui")
-				
-				if index+2 < len(list(document)):
-					
-					if document[::][index+1].pos_ == "CCONJ" and document[::][index+2].pos_ == "NOUN":
-						print("entre aqui 2")
-						frase_nueva = str(list(document)[::][index-2])+ " "+str(list(document)[::][index-1]) + " "+ str(list(document)[::][index+2])
-						print("frase_nueva", frase_nueva)
+			while(frase != frase2):
+				if frase2 == "":					
+					print("frase inicial: ", frase)
+					frase2 = Preprocesamiento(frase)
+					print("frase2", frase2)
+					print("--- %s seconds ---" % (time.time() - start_time))
+				else:
+					frase = copy.deepcopy(frase2)
+					frase2 = Preprocesamiento(frase)
 
-
-
-
-
-				print(token.lemma_, token.pos_, token.dep_)
-			#displacy.serve(document, style='ent')
-			print("--- %s seconds ---" % (time.time() - start_time))
 
 			data = "doc"
 
