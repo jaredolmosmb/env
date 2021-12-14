@@ -12,7 +12,7 @@ import json
 import copy
 import nltk
 import time
-import es_core_news_sm, es_core_news_md
+import es_core_news_sm, es_core_news_md, es_core_news_lg
 import spacy
 from spacy import displacy
 from negspacy.negation import Negex
@@ -29,7 +29,7 @@ def Sort(sub_li):
 	return sub_li
 
 def Preprocesamiento(la_frase):
-	nlp = spacy.load('es_core_news_md')
+	nlp = spacy.load('es_core_news_lg')
 	#frase = "El paciente está orientado en tiempo y lugar"
 	frase = la_frase
 	document = nlp(frase)
@@ -41,6 +41,16 @@ def Preprocesamiento(la_frase):
 		print(token.lemma_, token.pos_, token.dep_)
 
 	for index, token in enumerate(list(document)):
+		if index+3 < len(list(document)):
+
+			if document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" and document[::][index+1].lemma_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
+				noun = str(list(document)[::][index])
+				adjective2 = str(list(document)[::][index+3])
+				frase_nueva = noun +" "+ adjective2
+				indice_frase_ori = frase.find(str(list(document)[::][index+3]))
+				print("frase_nueva = ", frase_nueva)
+				frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
+				break
 		if index == 0 or index == 1:
 			continue
 		#if (index+2 < len(list(document)[::])):
@@ -72,6 +82,8 @@ def Preprocesamiento(la_frase):
 		
 				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
 
+
+
 	return frase
 
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
@@ -92,7 +104,7 @@ def InicioView(request):
 		if isValid:
 			stop_words = set(stopwords.words("spanish"))
 			start_time = time.time()
-			nlp = spacy.load('es_core_news_md')
+			nlp = spacy.load('es_core_news_lg')
 			#frase = "El paciente está orientado en tiempo y lugar"
 			#frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
 			frase = "Abdomen depresible y doloroso"
