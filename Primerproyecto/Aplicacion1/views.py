@@ -36,14 +36,14 @@ def Preprocesamiento(la_frase):
 	prev_prev_el = ""
 	prev_el=""
 	ele=""
+	print("la_frase", la_frase)
 
 	for index, token in enumerate(list(document)):
 		print(token.lemma_, token.pos_, token.dep_)
 
 	for index, token in enumerate(list(document)):
 		if index+3 < len(list(document)):
-
-			if document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" and document[::][index+1].lemma_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
+			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
 				noun = str(list(document)[::][index])
 				adjective2 = str(list(document)[::][index+3])
 				frase_nueva = noun +" "+ adjective2
@@ -63,7 +63,7 @@ def Preprocesamiento(la_frase):
 		#print()
 
 		if index+2 < len(list(document)):
-			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].pos_ == "CCONJ" and document[::][index+2].pos_ == "NOUN":
+			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN") and document[::][index+1].pos_ == "CCONJ" and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
 				adjective = str(list(document)[::][index-2])
 				adposition = str(list(document)[::][index-1])
 				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
@@ -72,7 +72,7 @@ def Preprocesamiento(la_frase):
 	
 				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
 
-			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and document[::][index].pos_ == "NOUN" and document[::][index+1].lemma_ == "," and document[::][index+2].pos_ == "NOUN":
+			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN") and document[::][index+1].lemma_ == "," and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
 				
 				adjective = str(list(document)[::][index-2])
 				adposition = str(list(document)[::][index-1])
