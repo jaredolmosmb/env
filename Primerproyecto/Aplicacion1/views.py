@@ -12,7 +12,7 @@ import json
 import copy
 import nltk
 import time
-import es_core_news_sm
+import es_core_news_sm, es_core_news_md
 import spacy
 from spacy import displacy
 from negspacy.negation import Negex
@@ -29,7 +29,7 @@ def Sort(sub_li):
 	return sub_li
 
 def Preprocesamiento(la_frase):
-	nlp = spacy.load('es_core_news_sm')
+	nlp = spacy.load('es_core_news_md')
 	#frase = "El paciente está orientado en tiempo y lugar"
 	frase = la_frase
 	document = nlp(frase)
@@ -92,10 +92,10 @@ def InicioView(request):
 		if isValid:
 			stop_words = set(stopwords.words("spanish"))
 			start_time = time.time()
-			nlp = spacy.load('es_core_news_sm')
+			nlp = spacy.load('es_core_news_md')
 			#frase = "El paciente está orientado en tiempo y lugar"
 			#frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
-			frase = "Extremidades simetricas e integras"
+			frase = "Abdomen depresible y doloroso"
 			frase2 = ""
 
 			while(frase != frase2):
