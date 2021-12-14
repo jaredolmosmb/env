@@ -16,7 +16,7 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 import nltk
 import time
-import es_core_news_sm
+import es_core_news_sm, es_core_news_lg
 import numpy
 import spacy
 import threading
@@ -32,7 +32,7 @@ def Sort_4(sub_li):
 	return sub_li
 
 def Preprocesamiento(la_frase):
-	nlp = spacy.load('es_core_news_sm')
+	nlp = spacy.load('es_core_news_lg')
 	#frase = "El paciente está orientado en tiempo y lugar"
 	frase = la_frase
 	document = nlp(frase)
@@ -40,11 +40,12 @@ def Preprocesamiento(la_frase):
 	prev_el=""
 	ele=""
 
-	
+	for index, token in enumerate(list(document)):
+		print(token.lemma_, token.pos_, token.dep_)
 
 	for index, token in enumerate(list(document)):
 		if index+3 < len(list(document)):
-			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
+			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
 				noun = str(list(document)[::][index])
 				adjective2 = str(list(document)[::][index+3])
 				frase_nueva = noun +" "+ adjective2
