@@ -72,6 +72,26 @@
     ]
 }
 
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : "abdomen depresible, doloroso y distendido."
+                    }
+        }
+    ]
+}
+
+
+
                       "conclusion" : "Paciente el cual lo encontramos en posicion semiflower. con posicion libremente escogida. neurologicamente consciente, orientado en tiempo."
 {
     "resourceType": "Bundle",

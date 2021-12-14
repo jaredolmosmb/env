@@ -43,7 +43,15 @@ def Preprocesamiento(la_frase):
 
 	for index, token in enumerate(list(document)):
 		if index+3 < len(list(document)):
-			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
+			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
+				noun = str(list(document)[::][index])
+				adjective2 = str(list(document)[::][index+3])
+				frase_nueva = noun +" "+ adjective2
+				indice_frase_ori = frase.find(str(list(document)[::][index+3]))
+				print("frase_nueva = ", frase_nueva)
+				frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
+				break
+			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].lemma_ == "," and document[::][index+3].pos_ == "ADJ":
 				noun = str(list(document)[::][index])
 				adjective2 = str(list(document)[::][index+3])
 				frase_nueva = noun +" "+ adjective2
@@ -107,7 +115,8 @@ def InicioView(request):
 			nlp = spacy.load('es_core_news_lg')
 			#frase = "El paciente está orientado en tiempo y lugar"
 			#frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
-			frase = "Abdomen depresible y doloroso"
+			#frase = "Abdomen depresible y doloroso"
+			frase = "abdomen depresible, doloroso y distendido"
 			frase2 = ""
 
 			while(frase != frase2):
