@@ -695,27 +695,21 @@ def ProcesarBundleView(request):
 			 	if 'conclusion' in val['resource']:
 			 		frasePrueba = val['resource']['conclusion'].lower() 
 			 		stop_words = set(stopwords.words("spanish"))
-			 		
-			 		#frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
+			 		#----preprocesamiento de POS (part of Speech)			 		
 			 		frase2 = ""
-
 			 		while(frasePrueba != frase2):
-			 			if frase2 == "":					
-			 				print("frase inicial: ", frasePrueba)
+			 			if frase2 == "":
 			 				frase2 = Preprocesamiento(frasePrueba)
-			 				print("frase2", frase2)
-			 				print("--- %s seconds ---" % (time.time() - start_time))
 			 			else:
 			 				frasePrueba = copy.deepcopy(frase2)
 			 				frase2 = Preprocesamiento(frasePrueba)
-
-			 		print("la frase final es :", frase2)
 			 		frasePrueba = copy.deepcopy(frase2)
-			 		
-			 		print("frasePrueba = ", frasePrueba)
+
+			 		#-----Fin preprocesamiento de POS
 			 		frasePrueba = frasePrueba.replace(',', '.')
+
 			 		tokens_frases = sent_tokenize(frasePrueba)
-			 		print("len(tokens_frases)", len(tokens_frases))
+			 		#print("len(tokens_frases)", len(tokens_frases))
 			 		fraseFinal = ""
 			 		#----Procesamiento sin preprocesamiento de frases Frecuentes
 			 		"""
@@ -984,6 +978,17 @@ def ProcesarDiagnosticReportView(request):
 		 		#frasePrueba = normalize(responseMA['conclusion']).lower()
 		 		frasePrueba = responseMA['conclusion'].lower()
 		 		stop_words = set(stopwords.words("spanish"))
+		 		#----preprocesamiento de POS (part of Speech)			 		
+		 		frase2 = ""
+		 		while(frasePrueba != frase2):
+		 			if frase2 == "":
+		 				frase2 = Preprocesamiento(frasePrueba)
+		 			else:
+		 				frasePrueba = copy.deepcopy(frase2)
+		 				frase2 = Preprocesamiento(frasePrueba)
+		 		frasePrueba = copy.deepcopy(frase2)
+
+		 		#-----Fin preprocesamiento de POS
 		 		frasePrueba = frasePrueba.replace(',', '.')
 		 		tokens_frases = sent_tokenize(frasePrueba)
 		 		#print("len(tokens_frases)", len(tokens_frases))

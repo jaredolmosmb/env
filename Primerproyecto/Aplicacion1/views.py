@@ -94,7 +94,8 @@ def InicioView(request):
 			start_time = time.time()
 			nlp = spacy.load('es_core_news_sm')
 			#frase = "El paciente está orientado en tiempo y lugar"
-			frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
+			#frase = "El paciente está orientado en tiempo, dimension, espacio y lugar"
+			frase = "Extremidades simetricas e integras"
 			frase2 = ""
 
 			while(frase != frase2):
