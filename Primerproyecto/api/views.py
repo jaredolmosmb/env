@@ -40,8 +40,8 @@ def Preprocesamiento(la_frase):
 	prev_el=""
 	ele=""
 
-	for index, token in enumerate(list(document)):
-		print(token.lemma_, token.pos_, token.dep_)
+	#for index, token in enumerate(list(document)):
+	#	print(token.lemma_, token.pos_, token.dep_)
 
 	for index, token in enumerate(list(document)):
 		if index+3 < len(list(document)):
@@ -50,7 +50,7 @@ def Preprocesamiento(la_frase):
 				adjective2 = str(list(document)[::][index+3])
 				frase_nueva = noun +" "+ adjective2
 				indice_frase_ori = frase.find(str(list(document)[::][index+3]))
-				print("frase_nueva = ", frase_nueva)
+				#print("frase_nueva = ", frase_nueva)
 				frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
 				break
 			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].lemma_ == "," and document[::][index+3].pos_ == "ADJ":
@@ -58,7 +58,7 @@ def Preprocesamiento(la_frase):
 				adjective2 = str(list(document)[::][index+3])
 				frase_nueva = noun +" "+ adjective2
 				indice_frase_ori = frase.find(str(list(document)[::][index+3]))
-				print("frase_nueva = ", frase_nueva)
+				#print("frase_nueva = ", frase_nueva)
 				frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
 				break
 		if index == 0 or index == 1:
@@ -259,7 +259,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	#-----------Guardar tokens de los conceptos encontrados en la frase
 	descAceptadas=[]
 	for i in conceptos3:
-		desc = DescriptionS.objects.filter(conceptid = i[0])
+		desc = DescriptionS.objects.filter(conceptid = i)
 		for j in desc:
 			#print(j.term)
 			tokens = [t for t in j.term.split()]
@@ -727,7 +727,7 @@ def ProcesarBundleView(request):
 			 		frasePrueba = frasePrueba.replace(',', '.')
 
 			 		tokens_frases = sent_tokenize(frasePrueba)
-			 		#print("len(tokens_frases)", len(tokens_frases))
+			 		print("len(tokens_frases)", len(tokens_frases))
 			 		fraseFinal = ""
 			 		#----Procesamiento sin preprocesamiento de frases Frecuentes
 			 		"""
