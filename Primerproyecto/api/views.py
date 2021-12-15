@@ -21,6 +21,7 @@ import numpy
 import spacy
 import threading
 from django.db import connections
+from joblib import Parallel, delayed
 
 
 def Sort(sub_li): 
@@ -756,6 +757,7 @@ def ProcesarBundleView(request):
 			 					fraseFinal = fraseFinal + " "+ frases_status[1].capitalize()
 			 				if frases_status[2] == 0:
 			 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, val, start_time).capitalize()
+			 					
 
 
 
