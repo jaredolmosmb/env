@@ -22,6 +22,10 @@ import spacy
 import threading
 from django.db import connections
 from joblib import Parallel, delayed
+import multiprocessing
+from functools import partial
+from itertools import repeat
+from multiprocessing import Pool, freeze_support
 
 
 def Sort(sub_li): 
@@ -741,11 +745,13 @@ def ProcesarBundleView(request):
 			 				#ProcesarOracion2(frases, indx, val)
 			 		"""
 			 		status_frases = []
+			 		
 			 		if tokens_frases:
 			 			for indx, frases in enumerate(tokens_frases):
 			 				status_frases.append(ProcesarOracionFrecuentes(frases, indx, val, start_time))
 
 			 				#ProcesarOracion2(frases, indx, val)
+			 		
 			 		for indx_status, frases_status in enumerate(status_frases):
 			 			if indx_status == 0:
 			 				if frases_status[2] == 1:
@@ -757,7 +763,15 @@ def ProcesarBundleView(request):
 			 					fraseFinal = fraseFinal + " "+ frases_status[1].capitalize()
 			 				if frases_status[2] == 0:
 			 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, val, start_time).capitalize()
-			 					
+			 		
+
+			 		#-----------------------------multiprocesamiento
+			 		"""
+			 		pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+			 		resultados = pool.map(partial(ProcesarOracion2, indexP=1, val = val, start_time = start_time), status_frases[])
+			 		print("resultados", resultados)
+			 		"""
+			 		
 
 
 
