@@ -747,11 +747,12 @@ def ProcesarBundleView(request):
 			 		status_frases = []
 			 		
 			 		if tokens_frases:
-			 			for indx, frases in enumerate(tokens_frases):
-			 				status_frases.append(ProcesarOracionFrecuentes(frases, indx, val, start_time))
+			 			status_frases = Parallel(n_jobs=-1, prefer="threads")(delayed(ProcesarOracionFrecuentes)(frases, indx, val, start_time) for indx, frases in enumerate(tokens_frases))
+			 			#for indx, frases in enumerate(tokens_frases):
+			 			#	status_frases.append(ProcesarOracionFrecuentes(frases, indx, val, start_time))
 
 			 				#ProcesarOracion2(frases, indx, val)
-			 		
+			 			#print("status_frases", status_frases)
 			 		for indx_status, frases_status in enumerate(status_frases):
 			 			if indx_status == 0:
 			 				if frases_status[2] == 1:
