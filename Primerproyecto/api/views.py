@@ -27,6 +27,9 @@ from functools import partial
 from itertools import repeat
 from multiprocessing import Pool, freeze_support
 
+def Sort_0(sub_li): 
+	sub_li.sort(key = lambda x: int(x[0]),reverse=False)
+	return sub_li
 
 def Sort(sub_li): 
 	sub_li.sort(key = lambda x: x[1],reverse=True)
@@ -280,9 +283,9 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	
 
 	if frasePrueba2 == "":
-		return frasePrueba
+		return [indexP, frasePrueba, 1]
 	else:
-		return frasePrueba2
+		return [indexP, frasePrueba2, 1]
 	
 def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
@@ -753,6 +756,22 @@ def ProcesarBundleView(request):
 
 			 				#ProcesarOracion2(frases, indx, val)
 			 			#print("status_frases", status_frases)
+
+			 		lista_unos = [i2 for indx2, i2 in enumerate(status_frases) if i2[2] == 1]
+			 		lista_final = []
+			 		print("lista_unos", lista_unos)
+			 		lista_final = Parallel(n_jobs=-1, prefer="threads")(delayed(ProcesarOracion2)(i[1], indx, val, start_time) for indx, i in enumerate(status_frases) if i[2] == 0)
+			 		lista_unida = lista_unos + lista_final
+			 		print("lista_unida", lista_unida)
+			 		lista_unida = Sort_0(lista_unida)
+
+			 		for indx3, item in enumerate(lista_unida):
+					  if indx3 == 0:
+					    fraseFinal = fraseFinal + item[1].capitalize()
+					  else:
+					    fraseFinal = fraseFinal + " "+ item[1].capitalize()
+			 		
+			 		"""
 			 		for indx_status, frases_status in enumerate(status_frases):
 			 			if indx_status == 0:
 			 				if frases_status[2] == 1:
@@ -765,7 +784,7 @@ def ProcesarBundleView(request):
 			 				if frases_status[2] == 0:
 			 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, val, start_time).capitalize()
 			 		
-
+					"""
 			 		#-----------------------------multiprocesamiento
 			 		"""
 			 		pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
