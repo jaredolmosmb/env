@@ -508,8 +508,6 @@ def ProcesarBundleView(request):
 		recurso = responseMA['resourceType']
 	#print("recurso = ", recurso)
 	
-	
-
 		if (recurso == 'Bundle'):
 		 start_time = time.time()
 		 responseMA = request.data
@@ -1060,22 +1058,38 @@ def ProcesarDiagnosticReportView(request):
 		 		"""
 		 		status_frases = []
 		 		if tokens_frases:
-		 			for indx, frases in enumerate(tokens_frases):
+		 			status_frases = Parallel(n_jobs=-1, prefer="threads")(delayed(ProcesarOracionFrecuentes)(frases, indx, responseMA, start_time) for indx, frases in enumerate(tokens_frases))
+		 			"""for indx, frases in enumerate(tokens_frases):
 		 				status_frases.append(ProcesarOracionFrecuentes(frases, indx, responseMA, start_time))
+		 			"""
 
 		 				#ProcesarOracion2(frases, indx, responseMA)
-		 		for indx_status, frases_status in enumerate(status_frases):
-		 			if indx_status == 0:
-		 				if frases_status[2] == 1:
-		 					fraseFinal = fraseFinal + frases_status[1].capitalize()
-		 				if frases_status[2] == 0:
-		 					fraseFinal = fraseFinal + ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
-		 			else:
-		 				if frases_status[2] == 1:
-		 					fraseFinal = fraseFinal + " "+ frases_status[1].capitalize()
-		 				if frases_status[2] == 0:
-		 					fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
+		 		lista_unos = [i2 for indx2, i2 in enumerate(status_frases) if i2[2] == 1]
+		 		lista_final = []
+		 		print("lista_unos", lista_unos)
+		 		lista_final = Parallel(n_jobs=-1, prefer="threads")(delayed(ProcesarOracion2)(i[1], indx, responseMA, start_time) for indx, i in enumerate(status_frases) if i[2] == 0)
+		 		lista_unida = lista_unos + lista_final
+		 		print("lista_unida", lista_unida)
+		 		lista_unida = Sort_0(lista_unida)
 
+		 		for indx3, item in enumerate(lista_unida):
+		 		  if indx3 == 0:
+		 		    fraseFinal = fraseFinal + item[1].capitalize()
+		 		  else:
+		 		    fraseFinal = fraseFinal + " "+ item[1].capitalize()
+		 		"""
+				for indx_status, frases_status in enumerate(status_frases):
+					if indx_status == 0:
+						if frases_status[2] == 1:
+							fraseFinal = fraseFinal + frases_status[1].capitalize()
+						if frases_status[2] == 0:
+							fraseFinal = fraseFinal + ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
+					else:
+						if frases_status[2] == 1:
+							fraseFinal = fraseFinal + " "+ frases_status[1].capitalize()
+						if frases_status[2] == 0:
+							fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
+				"""
 
 
 		 		responseMA.update( {"conclusion": fraseFinal} )
