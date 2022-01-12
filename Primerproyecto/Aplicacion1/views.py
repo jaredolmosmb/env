@@ -16,6 +16,8 @@ import es_core_news_sm, es_core_news_md, es_core_news_lg
 import spacy
 from spacy import displacy
 from negspacy.negation import Negex
+import xlrd
+
 
 
 from .negex import *
@@ -97,7 +99,112 @@ def Preprocesamiento(la_frase):
 #funicon para probar el procesamiento de distintos recursos de FHIR sin modificar la api
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
-	recurso = 'PruebaPOS'
+	#recurso = 'PruebaPOS'
+	recurso = 'conversion'
+
+
+	if recurso == "conversion":#convertir los datos de notas clinicas en recursos bundle
+		
+		# path del archivo
+		loc = ("C:/Users/artur/Django/env/Primerproyecto/Evolucion.xls")
+		 
+		# abrir workbook
+		wb = xlrd.open_workbook(loc)
+		sheet = wb.sheet_by_index(0)
+		 
+		# ejemplo row 0 y col 0
+		print(sheet.cell_value(0, 0))
+		print(type(sheet.cell_value(0, 0)))
+
+		# numero de rows
+		print("sheet.nrows", sheet.nrows)
+		num_filas = sheet.nrows
+		notas_de_evolucion = []
+		dict_evolucion = {
+		    "resourceType": "Bundle",
+		    "entry": [
+		        {
+		            "fullUrl": "DiagnosticReport/D001",
+		            "resource": {
+		                      "resourceType" : "DiagnosticReport",
+		                      "subject" : { "reference" : "Patient/P001" },
+		                      "identifier" : [{ 
+		                            "use" : "oficial",
+		                            "value" : "D001"
+		                             }],
+		                      "conclusion" : ""
+		                    }
+		        }
+		    ]
+		}
+		dict_of_dict ={}
+
+		for i in range(1,num_filas):
+			notas_de_evolucion.append(sheet.cell_value(i, 1))
+			if i == 1:
+				dict_evolucion = {
+								    "resourceType": "Bundle",
+								    "entry": [
+								        {
+								            "fullUrl": "DiagnosticReport/D"+str(i),
+								            "resource": {
+								                      "resourceType" : "DiagnosticReport",
+								                      "subject" : { "reference" : "Patient/P"+str(i) },
+								                      "identifier" : [{ 
+								                            "use" : "oficial",
+								                            "value" : "D"+str(i)
+								                             }],
+								                      "conclusion" : ""+(sheet.cell_value(i, 1).replace("\n",""))
+								                    }
+								        }
+								    ]
+								}
+			else:
+				new_entry = {
+					            "fullUrl": "DiagnosticReport/D"+str(i),
+					            "resource": {
+					                      "resourceType" : "DiagnosticReport",
+					                      "subject" : { "reference" : "Patient/P"+str(i) },
+					                      "identifier" : [{ 
+					                            "use" : "oficial",
+					                            "value" : "D"+str(i)
+					                             }],
+					                      "conclusion" : ""+(sheet.cell_value(i, 1).replace("\n",""))
+					                    }
+					        }
+
+
+				dict_evolucion['entry'].append(new_entry)
+			with open('data.json', 'w', encoding="utf-8") as file:
+				str(dict_evolucion).encode('utf-8')
+				json.dump(dict_evolucion, file, indent=4, ensure_ascii=False)
+
+
+			print("dict_evolucion", dict_evolucion)
+
+		print("notas_de_evolucion", notas_de_evolucion)
+		print("len(notas_de_evolucion)", len(notas_de_evolucion))
+
+		"""
+		{
+		    "resourceType": "Bundle",
+		    "entry": [
+		        {
+		            "fullUrl": "DiagnosticReport/D001",
+		            "resource": {
+		                      "resourceType" : "DiagnosticReport",
+		                      "subject" : { "reference" : "Patient/P001" },
+		                      "identifier" : [{ 
+		                            "use" : "oficial",
+		                            "value" : "D002"
+		                             }],
+		                      "conclusion" : "Paciente el cual lo encontramos en posicion semiflower, con carraspera."
+		                    }
+		        }
+		    ]
+		}
+		"""
+
 
 	if (recurso == 'PruebaPOS'):
 		with open("TextoLibreAdministracion.json", "r") as read_file:

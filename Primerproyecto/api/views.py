@@ -482,10 +482,10 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 
 	if frasePrueba2 == "":
 		listaRetorno = [indexP, frasePrueba, 0]
-		return listaRetorno
+		#return listaRetorno
 	else:
 		listaRetorno = [indexP, frasePrueba2, 1]
-		return listaRetorno
+	return listaRetorno
 
 @api_view(['GET'])
 def apiOverview(request):
