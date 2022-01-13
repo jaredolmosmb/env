@@ -175,9 +175,9 @@ def InicioView(request):
 
 
 				dict_evolucion['entry'].append(new_entry)
-			with open('data.json', 'w', encoding="utf-8") as file:
-				str(dict_evolucion).encode('utf-8')
-				json.dump(dict_evolucion, file, indent=4, ensure_ascii=False)
+		with open('data.json', 'w', encoding="utf-8") as file:
+			str(dict_evolucion).encode('utf-8')
+			json.dump(dict_evolucion, file, indent=4, ensure_ascii=False)
 
 
 			print("dict_evolucion", dict_evolucion)
