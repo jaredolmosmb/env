@@ -47,52 +47,58 @@ def Preprocesamiento(la_frase):
 	prev_prev_el = ""
 	prev_el=""
 	ele=""
+	contador = 0
+	frase2=""
+
 
 	#for index, token in enumerate(list(document)):
 	#	print(token.lemma_, token.pos_, token.dep_)
 
-	for index, token in enumerate(list(document)):
-		if index+3 < len(list(document)):
-			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
-				noun = str(list(document)[::][index])
-				adjective2 = str(list(document)[::][index+3])
-				frase_nueva = noun +" "+ adjective2
-				indice_frase_ori = frase.find(str(list(document)[::][index+3]))
-				#print("frase_nueva = ", frase_nueva)
-				frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
-				break
-			if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].lemma_ == "," and document[::][index+3].pos_ == "ADJ":
-				noun = str(list(document)[::][index])
-				adjective2 = str(list(document)[::][index+3])
-				frase_nueva = noun +" "+ adjective2
-				indice_frase_ori = frase.find(str(list(document)[::][index+3]))
-				#print("frase_nueva = ", frase_nueva)
-				frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
-				break
-		if index == 0 or index == 1:
-			continue
+	while frase != frase2:	
+	print("entre al while")		
+		frase2 = copy.deepcopy(frase)
+		for index, token in enumerate(list(document)):
+			if index+3 < len(list(document)):
+				if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
+					noun = str(list(document)[::][index])
+					adjective2 = str(list(document)[::][index+3])
+					frase_nueva = noun +" "+ adjective2
+					indice_frase_ori = frase.find(str(list(document)[::][index+3]))
+					#print("frase_nueva = ", frase_nueva)
+					frase2 = frase2.replace(str(list(document)[::][index+3]),frase_nueva)
+					#break
+				if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].lemma_ == "," and document[::][index+3].pos_ == "ADJ":
+					noun = str(list(document)[::][index])
+					adjective2 = str(list(document)[::][index+3])
+					frase_nueva = noun +" "+ adjective2
+					indice_frase_ori = frase.find(str(list(document)[::][index+3]))
+					#print("frase_nueva = ", frase_nueva)
+					frase2 = frase2.replace(str(list(document)[::][index+3]),frase_nueva)
+					#break
+			if index == 0 or index == 1:
+				continue
 
-		if index+2 < len(list(document)):
-			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN") and document[::][index+1].pos_ == "CCONJ" and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
-				adjective = str(list(document)[::][index-2])
-				adposition = str(list(document)[::][index-1])
-				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
+			if index+2 < len(list(document)):
+				if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN") and document[::][index+1].pos_ == "CCONJ" and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
+					adjective = str(list(document)[::][index-2])
+					adposition = str(list(document)[::][index-1])
+					frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
 
-				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
-	
-				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
-
-			if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN") and document[::][index+1].lemma_ == "," and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
-				
-				adjective = str(list(document)[::][index-2])
-				adposition = str(list(document)[::][index-1])
-				frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
-	
-				indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
+					indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
 		
-				frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
+					frase2 = frase2.replace(str(list(document)[::][index+2]),frase_nueva)
 
-	return frase
+				if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN") and document[::][index+1].lemma_ == "," and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
+					
+					adjective = str(list(document)[::][index-2])
+					adposition = str(list(document)[::][index-1])
+					frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
+		
+					indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
+			
+					frase2 = frase2.replace(str(list(document)[::][index+2]),frase_nueva)
+
+	return frase2
 
 def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
@@ -719,15 +725,20 @@ def ProcesarBundleView(request):
 			 	if 'conclusion' in val['resource']:
 			 		frasePrueba = val['resource']['conclusion'].lower() 
 			 		stop_words = set(stopwords.words("spanish"))
-			 		#----preprocesamiento de POS (part of Speech)			 		
 			 		frase2 = ""
-			 		while(frasePrueba != frase2):
-			 			if frase2 == "":
-			 				frase2 = Preprocesamiento(frasePrueba)
-			 			else:
-			 				frasePrueba = copy.deepcopy(frase2)
-			 				frase2 = Preprocesamiento(frasePrueba)
-			 		frasePrueba = copy.deepcopy(frase2)
+			 		tokens_frases1 = sent_tokenize(frasePrueba)
+			 		frases_preprocesadas = Parallel(n_jobs=-1, prefer="threads")(delayed(Preprocesamiento)(frasePrueba) for indx, frases in enumerate(tokens_frases1))
+			 		print("frases_preprocesadas", frases_preprocesadas)
+
+			 		#----preprocesamiento de POS (part of Speech)			 		
+			 		"""frase2 = ""
+			 					 					 					 		while(frasePrueba != frase2):
+			 					 					 					 			if frase2 == "":
+			 					 					 					 				frase2 = Preprocesamiento(frasePrueba)
+			 					 					 					 			else:
+			 					 					 					 				frasePrueba = copy.deepcopy(frase2)
+			 					 					 					 				frase2 = Preprocesamiento(frasePrueba)
+			 					 					 					 		frasePrueba = copy.deepcopy(frase2)"""
 
 			 		#-----Fin preprocesamiento de POS
 			 		frasePrueba = frasePrueba.replace(',', '.')
