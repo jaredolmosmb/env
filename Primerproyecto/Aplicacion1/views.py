@@ -180,7 +180,7 @@ def InicioView(request):
 									json.dump(dict_evolucion, file, indent=4, ensure_ascii=False)"""
 
 
-			print("dict_evolucion", dict_evolucion)
+		print("dict_evolucion", dict_evolucion)
 
 		print("notas_de_evolucion", notas_de_evolucion)
 		print("len(notas_de_evolucion)", len(notas_de_evolucion))

@@ -26,6 +26,17 @@
 }
 
 {
+  "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : "abdomen depresible, doloroso y distendido."
+}
+
+
+{
     "resourceType": "Bundle",
     "entry": [
         {
