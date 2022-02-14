@@ -184,7 +184,61 @@
                             "use" : "oficial",
                             "value" : "D002"
                              }],
-                      "conclusion" : " Paciente el cual lo encontramos orientado en tiempo, espacio y lugar. En posicion semiflower, con carraspera."
+                      "conclusion" : " orientado en tiempo, espacio y lugar. En posicion semiflower, con carraspera."
+                    }
+        }
+    ]
+}
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : " orientado en tiempo."
+                    }
+        }
+    ]
+}
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : " ABDOMEN BLANDO."
+                    }
+        }
+    ]
+}
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : "ABDOMEN BLANDO."
                     }
         }
     ]
