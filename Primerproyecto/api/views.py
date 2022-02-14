@@ -51,8 +51,8 @@ def Preprocesamiento(indx, la_frase):
 	frase2=""
 
 
-	#for index, token in enumerate(list(document)):
-	#	print(token.lemma_, token.pos_, token.dep_)
+	for index, token in enumerate(list(document)):
+		print(token.lemma_, token.pos_, token.dep_)
 	while True:
 		print("entre a while")
 		if frase != frase2:			
@@ -76,8 +76,8 @@ def Preprocesamiento(indx, la_frase):
 						#print("frase_nueva = ", frase_nueva)
 						frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
 						#break
-				if index == 0 or index == 1:
-					continue
+				"""if index == 0 or index == 1:
+																	continue"""
 
 				if index+2 < len(list(document)):
 					if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN") and document[::][index+1].pos_ == "CCONJ" and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
@@ -113,6 +113,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
 	#print("sub_toks", sub_toks) 
 	
+	print("fraseprueba en procesar oracion 2", frasePrueba)
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
 	#print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
 	# ---------ELIMINAR STOPWORDS Y SUJETO DE ORACION
@@ -299,6 +300,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 	# ---------TOKENIZAR POR PALABRAS LA FRASE A PROCESAR
 	stop_words = set(stopwords.words("spanish"))
+	print("fraseprueba en procesar oracion frecuentes", frasePrueba)
 	#nlp = spacy.load('es_core_news_sm')  
 	#doc=nlp(frasePrueba)
 	#print([(w.text, w.pos_, w.dep_) for w in doc])
@@ -753,7 +755,7 @@ def ProcesarBundleView(request):
 			 					 					 					 		frasePrueba = copy.deepcopy(frase2)"""
 
 			 		#-----Fin preprocesamiento de POS
-			 		frasePrueba = frasePrueba.replace(',', '.')
+			 		frasePrueba = frasePrueba.replace(',', '.').lower()
 
 			 		tokens_frases = sent_tokenize(frasePrueba)
 			 		print("len(tokens_frases)", len(tokens_frases))
@@ -1075,7 +1077,7 @@ def ProcesarDiagnosticReportView(request):
 		 				 				 				 		frasePrueba = copy.deepcopy(frase2)"""
 
 		 		#-----Fin preprocesamiento de POS
-		 		frasePrueba = frasePrueba.replace(',', '.')
+		 		frasePrueba = frasePrueba.replace(',', '.').lower()
 		 		tokens_frases = sent_tokenize(frasePrueba)
 		 		#print("len(tokens_frases)", len(tokens_frases))
 		 		#print("tokens_frases", tokens_frases)

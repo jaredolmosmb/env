@@ -132,6 +132,24 @@
     ]
 }
 
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : "ABDOMEN MUY DEPRESIBLE Y MUY DOLOROSO."
+                    }
+        }
+    ]
+}
+
 
 
 
