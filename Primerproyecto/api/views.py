@@ -730,9 +730,11 @@ def ProcesarBundleView(request):
 			 		stop_words = set(stopwords.words("spanish"))
 			 		frase2 = ""
 			 		tokens_frases1 = sent_tokenize(frasePrueba)
-			 		frases_preprocesadas = Parallel(n_jobs=-1, prefer="threads")(delayed(Preprocesamiento)(indx, frasePrueba) for indx, frases in enumerate(tokens_frases1))
-			 		#print("frases_preprocesadas", frases_preprocesadas)
+			 		print("tokens_frase1", tokens_frases1)
+			 		frases_preprocesadas = Parallel(n_jobs=-1, prefer="threads")(delayed(Preprocesamiento)(indx, frases) for indx, frases in enumerate(tokens_frases1))
+			 		
 			 		frases_preprocesada_ordenada = Sort_0(frases_preprocesadas)
+			 		print("frases_preprocesada_ordenada", frases_preprocesada_ordenada)
 			 		for indx4, item in enumerate(frases_preprocesada_ordenada):
 					  if indx4 == 0:
 					    frase2 = frase2 + item[1].capitalize()
@@ -1053,7 +1055,7 @@ def ProcesarDiagnosticReportView(request):
 		 		stop_words = set(stopwords.words("spanish"))
 		 		frase2 = ""
 		 		tokens_frases1 = sent_tokenize(frasePrueba)
-		 		frases_preprocesadas = Parallel(n_jobs=-1, prefer="threads")(delayed(Preprocesamiento)(indx, frasePrueba) for indx, frases in enumerate(tokens_frases1))
+		 		frases_preprocesadas = Parallel(n_jobs=-1, prefer="threads")(delayed(Preprocesamiento)(indx, frases) for indx, frases in enumerate(tokens_frases1))
 		 		#print("frases_preprocesadas", frases_preprocesadas)
 		 		frases_preprocesada_ordenada = Sort_0(frases_preprocesadas)
 		 		for indx4, item in enumerate(frases_preprocesada_ordenada):

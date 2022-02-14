@@ -18,6 +18,30 @@
 
 
 
+
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D1",
+            "resource": {
+                "resourceType": "DiagnosticReport",
+                "subject": {
+                    "reference": "Patient/P1"
+                },
+                "identifier": [
+                    {
+                        "use": "oficial",
+                        "value": "D1"
+                    }
+                ],
+                "conclusion": "SE ENCUENTRA PACIENTE DESPIERTO, BUENA COLORACION, ABDOMEN BLANDO, DEPRESIBLE, DOLOROSO. ULTRASONIDO VESICAL CONIMAGEN COMPATIBLE CON TUMOR VESICAL."
+            }
+        }
+    ]
+}
+
 {
     "resourceType": "Bundle",
     "entry": [
@@ -142,7 +166,7 @@
                             "use" : "oficial",
                             "value" : "D002"
                              }],
-                      "conclusion" : " Paciente el cual lo encontramos orientado en tiempo, espacio y lugar."
+                      "conclusion" : " Paciente el cual lo encontramos orientado en tiempo, espacio y lugar. En posicion semiflower, con carraspera."
                     }
         }
     ]
