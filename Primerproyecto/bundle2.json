@@ -220,7 +220,25 @@
                             "use" : "oficial",
                             "value" : "D002"
                              }],
-                      "conclusion" : " ABDOMEN BLANDO."
+                      "conclusion" : "abdomen muy depresible y muy doloroso."
+                    }
+        }
+    ]
+}
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" : "abdomen muy depresible, muy doloroso y muy distendido."
                     }
         }
     ]
