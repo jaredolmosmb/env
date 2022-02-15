@@ -51,43 +51,46 @@ def Preprocesamiento(indx, la_frase):
 	frase2=""
 
 
-	for index, token in enumerate(list(document)):
-		print(token.lemma_, token.pos_, token.dep_)
-	while True:
+
+	"""for index, token in enumerate(list(document)):
+					print(token.lemma_, token.pos_, token.dep_)"""
+	while frase != frase2:
 		print("entre a while")
-		(frase)
-		if frase != frase2:			
+		if frase != frase2:		
+			print(frase)	
 			frase2 = copy.deepcopy(frase)
 			document = nlp(frase2)
-			for index, token in enumerate(list(document)):
-				print(token.lemma_, token.pos_, token.dep_)
+			"""for index, token in enumerate(list(document)):
+													print(token.lemma_, token.pos_, token.dep_)"""
 			for index, token in enumerate(list(document)):
 				#-------- Tipo postponer-----------
 				if index+3 < len(list(document)):
-					if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV" or document[::][index].pos_ == "PRON") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
-						
+					if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV" or document[::][index].pos_ == "PRON" ) and document[::][index+1].pos_ == "ADJ" and document[::][index+2].pos_ == "CCONJ" and document[::][index+3].pos_ == "ADJ":
+						print("if uno")
 						noun = str(list(document)[::][index])
 						adjective2 = str(list(document)[::][index+3])
 						frase_nueva = noun +" "+ adjective2
 						indice_frase_ori = frase.find(str(list(document)[::][index+3]))
 						#print("frase_nueva = ", frase_nueva)
 						frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
-						#break
-					if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV" or document[::][index].pos_ == "PRON") and document[::][index+1].pos_ == "ADJ" and document[::][index+2].lemma_ == "," and document[::][index+3].pos_ == "ADJ":
 						
+					if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV" or document[::][index].pos_ == "PRON" ) and document[::][index+1].pos_ == "ADJ" and document[::][index+2].lemma_ == "," and document[::][index+3].pos_ == "ADJ":
+						print("if dos")
 						noun = str(list(document)[::][index])
 						adjective2 = str(list(document)[::][index+3])
 						frase_nueva = noun +" "+ adjective2
 						indice_frase_ori = frase.find(str(list(document)[::][index+3]))
 						#print("frase_nueva = ", frase_nueva)
 						frase = frase.replace(str(list(document)[::][index+3]),frase_nueva)
-						#break
+						
 				"""if index == 0 or index == 1:
 																	continue"""
+				
+				
 				#------------------Tipo postponer con modificador (muy, mas y tan)
 				if index+5 < len(list(document)):
 					if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV" or document[::][index].pos_ == "PRON") and document[::][index+1].pos_ == "ADV" and document[::][index+2].pos_ == "ADJ" and document[::][index+3].pos_ == "CCONJ" and document[::][index+4].pos_ == "ADV" and document[::][index+5].pos_ == "ADJ":
-						print("entre if tres")
+						print("if tres")
 						noun = str(list(document)[::][index])
 						conjuncion= " "+ str(list(document)[::][index+3]) + " "
 						adverb2 = str(list(document)[::][index+4])
@@ -96,9 +99,9 @@ def Preprocesamiento(indx, la_frase):
 						indice_frase_ori = frase.find(conjuncion)
 						frase = frase[:indice_frase_ori+3]+""+noun+" " +frase[indice_frase_ori+3:]
 						#frase = frase.replace(str(list(document)[::][index+5]),frase_nueva)
-						#break
-					if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV" or document[::][index].pos_ == "PRON") and document[::][index+1].pos_ == "ADV" and document[::][index+2].pos_ == "ADJ" and document[::][index+3].pos_ == "PUNCT" and document[::][index+4].pos_ == "ADV" and document[::][index+5].pos_ == "ADJ":
 						
+					if (document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "ADV" or document[::][index].pos_ == "PRON") and document[::][index+1].pos_ == "ADV" and document[::][index+2].pos_ == "ADJ" and document[::][index+3].pos_ == "PUNCT" and document[::][index+4].pos_ == "ADV" and document[::][index+5].pos_ == "ADJ":
+						print("if cuatro")
 						noun = str(list(document)[::][index])
 						conjuncion= str(list(document)[::][index+3]) + " "
 						adverb2 = str(list(document)[::][index+4])
@@ -108,10 +111,11 @@ def Preprocesamiento(indx, la_frase):
 						
 						frase = frase[:indice_frase_ori+2]+""+noun+" " +frase[indice_frase_ori+2:]
 						
+				
 				#-------- Tipo anteponer entre preposicion-----------
 				if index+2 < len(list(document)):
 					if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "PRON") and document[::][index+1].pos_ == "CCONJ" and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
-						
+						print("if cinco")
 						adjective = str(list(document)[::][index-2])
 						adposition = str(list(document)[::][index-1])
 						frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
@@ -119,9 +123,10 @@ def Preprocesamiento(indx, la_frase):
 						indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
 			
 						frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
+						
 
 					if document[::][index-2].pos_ == "ADJ" and document[::][index-1].pos_ == "ADP" and (document[::][index].pos_ == "NOUN" or document[::][index].pos_ == "PROPN" or document[::][index].pos_ == "PRON") and document[::][index+1].lemma_ == "," and (document[::][index+2].pos_ == "NOUN" or document[::][index+2].pos_ == "PROPN"):
-						
+						print("if seis")
 						adjective = str(list(document)[::][index-2])
 						adposition = str(list(document)[::][index-1])
 						frase_nueva = adjective+ " "+adposition + " "+ str(list(document)[::][index+2])
@@ -129,6 +134,8 @@ def Preprocesamiento(indx, la_frase):
 						indice_frase_original = frase.find(str(list(document)[::][index+2])) #encontrar indicie del segundo NOUN
 				
 						frase = frase.replace(str(list(document)[::][index+2]),frase_nueva)
+						
+				
 		else:
 			break
 
