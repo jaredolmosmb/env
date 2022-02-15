@@ -54,7 +54,25 @@
                             "use" : "oficial",
                             "value" : "D002"
                              }],
-                      "conclusion" : "El sistema financiero, hemorragia coroidea, para los efectos de esta Ley, se compone por el Banco de México, las instituciones de crédito, de seguros y de fianzas, conforme a lo dispuesto en dicha Ley. Trastorno de ansiedad de la niñez o la adolescencia"
+                      "conclusion" :  "ABDOMEN BLANDO, DEPRESIBLE."
+                    }
+        }
+    ]
+}
+
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D001",
+            "resource": {
+                      "resourceType" : "DiagnosticReport",
+                      "subject" : { "reference" : "Patient/P001" },
+                      "identifier" : [{ 
+                            "use" : "oficial",
+                            "value" : "D002"
+                             }],
+                      "conclusion" :  "PACIENTE MASCULINO DE 46 AÑOS DE EDAD, CURSA SU DIA 6 DE ESTANCIA INTRAHOSPITALARIA CON LOS SIGUIENTES DIAGNOSTICOS: 1).- INSUFICIENCIA CARDIACA CON FEVI REDUCIDA2).- INFARTO AL MIOCARDIO ANTEROSEPTAL3).- ACTP A LA DESCENDENTE ANTERIOR.4).-ECTASIA CORONARIA CDS. EL DIA DE HOY REFIERE ESTAR ASINTOMATICO, NIEGA ANGINA, DINSEA.O. MASCULINO, GLASGOW 15 PTS, CRANEO NORMOCEFALO, OJOS SIMETRICOS, PUPILAS ISOCORICAS, CUELLO CILINDRICO SIN PLETORA YUGULAR, TORAX SIMETRICO, NORMOLINEO CON RUIDOS RESPIRATORIOS PRESENTES EN AMBOS HEMITORAX, SIN AGREGADOS, RUIDOS CARDIACOS RITMICOS DE BUEN TONO E INTENSIDAD, CON SOPLO PROTOSISTOLICO MITRAL GRADO II/IV, SIN IRRADIACIONES, ABDOMEN BLANDO, DEPRESIBLE, EXTREMIDADES INTEGRAS, SIMETRICAS, SIN EDEMA. EXAMENES DE LABORATORIO. SIN ALTERACIONES, RX TORAX CON ATELECTASIA BASAL IZQ. COMENTARIO. PACIENTE MASCULINO QUE CURSA CON ADECUADA RECUPERACION, ACTUALMENTE CON ICC COMPENSADA, INIA A DEAMBULAR EN SU HABITACION SIN COMPLICACIONES. CUENTA CON ATELECTASIA BASAL IZQ. PEQUEÑA POR LO CUAL SE INDICA INSPITROMETRO INCENTIVO. SE DISMINUYE DOSIS DE DIURETIO DE ASA. SE ESPERA EGRESE EN BREVE"
                     }
         }
     ]
