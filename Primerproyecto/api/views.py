@@ -39,6 +39,21 @@ def Sort_4(sub_li):
 	sub_li.sort(key = lambda x: x[4],reverse=True)
 	return sub_li
 
+def match_con_frase(frase_original, lista_conceptos_encontrados):
+	print("entre en funcion de match")
+	l = lista_conceptos_encontrados
+	frase_original = frase_original.lower()
+	for i in l:
+		i["text2"]= i["text"].replace(" (hallazgo)", "")
+		i["text2"]= i["text2"].replace(" (trastorno)", "")
+		words = i["text2"].split()
+		print("words[-1]", words[-1])
+		indice_final_frase = frase_original.rfind(words[-1])+len(words[-1])
+		frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
+		print("indice_final_frase", indice_final_frase)
+	frase_con_ids = frase_original
+	return frase_con_ids
+
 def Preprocesamiento(indx, la_frase):
 	nlp = spacy.load('es_core_news_lg')
 	#frase = "El paciente está orientado en tiempo y lugar"
@@ -55,7 +70,7 @@ def Preprocesamiento(indx, la_frase):
 	"""for index, token in enumerate(list(document)):
 					print(token.lemma_, token.pos_, token.dep_)"""
 	while frase != frase2:
-		print("entre a while")
+		#print("entre a while")
 		if frase != frase2:		
 			print(frase)	
 			frase2 = copy.deepcopy(frase)
@@ -138,6 +153,8 @@ def Preprocesamiento(indx, la_frase):
 				
 		else:
 			break
+	#print("frase entrada", la_frase)
+	#print("frase salida", frase2)
 
 	return [indx, frase2]
 
@@ -151,7 +168,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 	#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
 	#print("sub_toks", sub_toks) 
 	
-	print("fraseprueba en procesar oracion 2", frasePrueba)
+	#print("fraseprueba en procesar oracion 2", frasePrueba)
 	tokens_palabras = word_tokenize(frasePrueba)#tokenizo por palabras la frase del texto libre
 	#print("--- %s seconds etapa 1 ---" % (time.time() - start_time))
 	# ---------ELIMINAR STOPWORDS Y SUJETO DE ORACION
@@ -281,8 +298,10 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				indice_inicial = str(frasePrueba2).lower().find(str(descripcion.term).lower())
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
+				print("descripcion.term ", descripcion.term)
+				con_id.append([str(conc3), descripcion.term])
 				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
-				con_id.append([str(conc3), FSN.term])
+				
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.id+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
 
@@ -488,7 +507,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
-				con_id.append([str(conc3), FSN.term])
+				con_id.append([str(conc3), descripcion.term])
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.conceptid+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 bd frecuentes---" % (time.time() - start_time))
 
@@ -786,11 +805,11 @@ def ProcesarBundleView(request):
 			 		stop_words = set(stopwords.words("spanish"))
 			 		frase2 = ""
 			 		tokens_frases1 = sent_tokenize(frasePrueba)
-			 		print("tokens_frase1", tokens_frases1)
+			 		#print("tokens_frase1", tokens_frases1)
 			 		frases_preprocesadas = Parallel(n_jobs=-1, prefer="threads")(delayed(Preprocesamiento)(indx, frases) for indx, frases in enumerate(tokens_frases1))
 			 		
 			 		frases_preprocesada_ordenada = Sort_0(frases_preprocesadas)
-			 		print("frases_preprocesada_ordenada", frases_preprocesada_ordenada)
+			 		#print("frases_preprocesada_ordenada", frases_preprocesada_ordenada)
 			 		for indx4, item in enumerate(frases_preprocesada_ordenada):
 					  if indx4 == 0:
 					    frase2 = frase2 + item[1].capitalize()
@@ -868,11 +887,20 @@ def ProcesarBundleView(request):
 			 		resultados = pool.map(partial(ProcesarOracion2, indexP=1, val = val, start_time = start_time), status_frases[])
 			 		print("resultados", resultados)
 			 		"""
+
+			 		#hacer match de concpetos encontrados con la frase original
+			 		frase_original = val['resource']['conclusion']
+			 		lista_conceptos_encontrados = val['resource']['extension']
+			 		#print("type(conceptos_entontrados) = ", type(lista_conceptos_encontrados))
+			 		frase_con_ids = match_con_frase(frase_original, lista_conceptos_encontrados)
+			 		print("frase_con_ids", frase_con_ids)
+
 			 		
 
 
 
-			 		val['resource'].update( {"conclusion": fraseFinal} )
+			 		val['resource'].update( {"conclusion2": fraseFinal} )
+			 		val['resource'].update( {"conclusion3": frase_con_ids} )
 
 			 	print("--- %s seconds Resource DiagnosticReport ---" % (time.time() - start_time))	
 
@@ -1182,7 +1210,7 @@ def ProcesarDiagnosticReportView(request):
 				"""
 
 
-		 		responseMA.update( {"conclusion": fraseFinal} )
+		 		responseMA.update( {"conclusion2": fraseFinal} )
 			print("--- %s seconds Resource DiagnosticReport alone ---" % (time.time() - start_time))	
 			return Response(responseMA)
 		else:

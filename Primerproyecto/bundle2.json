@@ -41,6 +41,29 @@
         }
     ]
 }
+#este para prueba de dejar texto intacto
+{
+    "resourceType": "Bundle",
+    "entry": [
+        {
+            "fullUrl": "DiagnosticReport/D1",
+            "resource": {
+                "resourceType": "DiagnosticReport",
+                "subject": {
+                    "reference": "Patient/P1"
+                },
+                "identifier": [
+                    {
+                        "use": "oficial",
+                        "value": "D1"
+                    }
+                ],
+                "conclusion": "SE ENCUENTRA PACIENTE DESPIERTO, BUENA COLORACION, ABDOMEN DEPRESIBLE, BLANDO Y DOLOROSO. ULTRASONIDO VESICAL CONIMAGEN COMPATIBLE CON TUMOR VESICAL."
+            }
+        }
+    ]
+}
+
 
 {
     "resourceType": "Bundle",
