@@ -270,6 +270,7 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 
 	# ---------AÑADIR ENTRE GUIONES MEDIOS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	conta = 0
+	con_id=[]
 	for indxconc3, conc3 in enumerate(conceptos3):
 		descripciones = DescriptionS.objects.filter(conceptid = str(conc3))
 		for descripcion in descripciones:
@@ -281,36 +282,41 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
-				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.term+'>>' + frasePrueba2[(indice_final):]
+				con_id.append([str(conc3), FSN.term])
+				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.id+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
 
 
 	# ---------AÑADIR PROPIEDAD "EXTENSION" AL JSON PARA MOSTRAR CUANTOS CONCEPTOS SE ENCONTRARON Y SU ID		
 	if "fullUrl" in val:		
-		if len(conceptos3) >= 1:
-			for item in conceptos3:
+		if len(con_id) >= 1:
+			for item in con_id:
 				if "extension" not in val['resource']:
 					val['resource'].update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1],
 					}]} )
 				else:
 					val['resource']["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1]
 					} )
 	else:
-		if len(conceptos3) >= 1:
-			for item in conceptos3:
+		if len(con_id) >= 1:
+			for item in con_id:
 				if "extension" not in val:
 					val.update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1]
 					}]} )
 				else:
 					val["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1]
 					} )
 	#-----------Guardar tokens de los conceptos encontrados en la frase
 	descAceptadas=[]
@@ -469,6 +475,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 
 	# ---------AÑADIR ENTRE GUIONES MEDIOS, LOS FSN DE LOS CONCEPTOS FINALES ENCONTRADOS
 	conta = 0
+	con_id=[]
 
 	for indxconc3, conc3 in enumerate(conceptos3):
 		descripciones = DescriptionS.objects.filter(conceptid = str(conc3))
@@ -481,37 +488,46 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
-				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.term+'>>' + frasePrueba2[(indice_final):]
+				con_id.append([str(conc3), FSN.term])
+				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.conceptid+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 bd frecuentes---" % (time.time() - start_time))
+
+	
+
+
 
 
 	# ---------AÑADIR PROPIEDAD "EXTENSION" AL JSON PARA MOSTRAR CUANTOS CONCEPTOS SE ENCONTRARON Y SU ID		
 
 	if "fullUrl" in val:		
-		if len(conceptos3) >= 1:
-			for item in conceptos3:
+		if len(con_id) >= 1:
+			for item in con_id:
 				if "extension" not in val['resource']:
 					val['resource'].update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1]
 					}]} )
 				else:
 					val['resource']["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1]
 					} )
 	else:
-		if len(conceptos3) >= 1:
+		if len(con_id) >= 1:
 			for item in conceptos3:
 				if "extension" not in val:
 					val.update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1]
 					}]} )
 				else:
 					val["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
-					"text" : item
+					"id" : item[0],
+					"text" : item[1]
 					} )
 
 	#-----------Guardar tokens de los conceptos encontrados en la frase
