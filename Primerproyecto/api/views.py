@@ -44,13 +44,26 @@ def match_con_frase(frase_original, lista_conceptos_encontrados):
 	l = lista_conceptos_encontrados
 	frase_original = frase_original.lower()
 	for i in l:
-		i["text2"]= i["text"].replace(" (hallazgo)", "")
-		i["text2"]= i["text2"].replace(" (trastorno)", "")
-		words = i["text2"].split()
+		if " (hallazgo)" in i["text"]:
+			i["text"]= i["text"].replace(" (hallazgo)", "")
+		elif " (trastorno)" in i["text"]:
+			i["text"]= i["text"].replace(" (trastorno)", "")
+		words = i["text"].split()
 		print("words[-1]", words[-1])
-		indice_final_frase = frase_original.rfind(words[-1])+len(words[-1])
-		frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
-		print("indice_final_frase", indice_final_frase)
+		buscar = words[-1]+" "
+		print("buscar", buscar)
+		if frase_original.rfind(words[-1]+" ") != -1:
+			indice_final_frase = frase_original.rfind(words[-1]+" ")+len(words[-1])
+			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
+		elif frase_original.rfind(words[-1]+",") != -1:
+			indice_final_frase = frase_original.rfind(words[-1]+",")+len(words[-1])
+			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
+		elif frase_original.rfind(words[-1]+".") != -1:
+			indice_final_frase = frase_original.rfind(words[-1]+".")+len(words[-1])
+			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
+		#indice_final_frase = frase_original.rfind(words[-1]+" ")+len(words[-1])
+		
+		#print("indice_final_frase", indice_final_frase)
 	frase_con_ids = frase_original
 	return frase_con_ids
 
@@ -299,9 +312,9 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
 				print("descripcion.term ", descripcion.term)
-				con_id.append([str(conc3), descripcion.term])
-				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
 				
+				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
+				con_id.append([str(conc3), descripcion.term, FSN.term])
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.id+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 ---" % (time.time() - start_time))
 
@@ -315,12 +328,14 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
 					"text" : item[1],
+					"FSN" : item[2]
 					}]} )
 				else:
 					val['resource']["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
-					"text" : item[1]
+					"text" : item[1],
+					"FSN" : item[2]
 					} )
 	else:
 		if len(con_id) >= 1:
@@ -329,13 +344,15 @@ def ProcesarOracion2(frasePrueba, indexP, val, start_time):
 					val.update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
-					"text" : item[1]
+					"text" : item[1],
+					"FSN" : item[2]
 					}]} )
 				else:
 					val["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
-					"text" : item[1]
+					"text" : item[1],
+					"FSN" : item[2]
 					} )
 	#-----------Guardar tokens de los conceptos encontrados en la frase
 	descAceptadas=[]
@@ -507,7 +524,7 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 				#print("indice_inicial", indice_inicial)
 				indice_final = indice_inicial + len(descripcion.term)
 				FSN = DescriptionS.objects.get(conceptid = str(conc3), typeid = "900000000000003001", active = "1")
-				con_id.append([str(conc3), descripcion.term])
+				con_id.append([str(conc3), descripcion.term, FSN.term])
 				frasePrueba2 = frasePrueba2[:(indice_final)] + ' <<'+FSN.conceptid+'>>' + frasePrueba2[(indice_final):]
 	#print("--- %s seconds etapa 10 bd frecuentes---" % (time.time() - start_time))
 
@@ -525,28 +542,32 @@ def ProcesarOracionFrecuentes(frasePrueba, indexP, val, start_time):
 					val['resource'].update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
-					"text" : item[1]
+					"text" : item[1],
+					"FSN" : item[2]
 					}]} )
 				else:
 					val['resource']["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
-					"text" : item[1]
+					"text" : item[1],
+					"FSN" : item[2]
 					} )
 	else:
 		if len(con_id) >= 1:
-			for item in conceptos3:
+			for item in con_id:
 				if "extension" not in val:
 					val.update( {"extension": [{
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
-					"text" : item[1]
+					"text" : item[1],
+					"FSN" : item[2]
 					}]} )
 				else:
 					val["extension"].append( {
 					"url" : "codeSNOMEDActivo "+str(indexP),
 					"id" : item[0],
-					"text" : item[1]
+					"text" : item[1],
+					"FSN" : item[2]
 					} )
 
 	#-----------Guardar tokens de los conceptos encontrados en la frase
@@ -894,11 +915,6 @@ def ProcesarBundleView(request):
 			 		#print("type(conceptos_entontrados) = ", type(lista_conceptos_encontrados))
 			 		frase_con_ids = match_con_frase(frase_original, lista_conceptos_encontrados)
 			 		print("frase_con_ids", frase_con_ids)
-
-			 		
-
-
-
 			 		val['resource'].update( {"conclusion2": fraseFinal} )
 			 		val['resource'].update( {"conclusion3": frase_con_ids} )
 
@@ -1208,9 +1224,14 @@ def ProcesarDiagnosticReportView(request):
 						if frases_status[2] == 0:
 							fraseFinal = fraseFinal + " "+ ProcesarOracion2(frases_status[1], indx_status, responseMA, start_time).capitalize()
 				"""
-
-
+		 		frase_original = responseMA['conclusion']
+		 		lista_conceptos_encontrados = responseMA['extension']
+		 		#print("type(conceptos_entontrados) = ", type(lista_conceptos_encontrados))
+		 		frase_con_ids = match_con_frase(frase_original, lista_conceptos_encontrados)
+		 		print("frase_con_ids", frase_con_ids)
 		 		responseMA.update( {"conclusion2": fraseFinal} )
+		 		responseMA.update( {"conclusion": frase_original} )
+		 		responseMA.update( {"conclusion3": frase_con_ids} )
 			print("--- %s seconds Resource DiagnosticReport alone ---" % (time.time() - start_time))	
 			return Response(responseMA)
 		else:
