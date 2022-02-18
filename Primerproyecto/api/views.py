@@ -52,14 +52,17 @@ def match_con_frase(frase_original, lista_conceptos_encontrados):
 		print("words[-1]", words[-1])
 		buscar = words[-1]+" "
 		print("buscar", buscar)
-		if frase_original.rfind(words[-1]+" ") != -1:
-			indice_final_frase = frase_original.rfind(words[-1]+" ")+len(words[-1])
+		if frase_original.rfind((words[-1]+" ").lower()) != -1:
+			indice_final_frase = frase_original.rfind((words[-1]+" ").lower())+len(words[-1])
 			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
-		elif frase_original.rfind(words[-1]+",") != -1:
-			indice_final_frase = frase_original.rfind(words[-1]+",")+len(words[-1])
+		elif frase_original.rfind((words[-1]+",").lower()) != -1:
+			indice_final_frase = frase_original.rfind((words[-1]+",").lower())+len(words[-1])
 			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
-		elif frase_original.rfind(words[-1]+".") != -1:
-			indice_final_frase = frase_original.rfind(words[-1]+".")+len(words[-1])
+		elif frase_original.rfind((words[-1]+".").lower()) != -1:
+			indice_final_frase = frase_original.rfind((words[-1]+".").lower())+len(words[-1])
+			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
+		elif frase_original.rfind((words[-1]+")").lower()) != -1:
+			indice_final_frase = frase_original.rfind((words[-1]+")").lower())+len(words[-1])
 			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
 		#indice_final_frase = frase_original.rfind(words[-1]+" ")+len(words[-1])
 		
@@ -1091,7 +1094,6 @@ def ProcesarBundleView(request):
 		 return Response(responseMA)
 	else:
 		return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 def ProcesarDiagnosticReportView(request):
