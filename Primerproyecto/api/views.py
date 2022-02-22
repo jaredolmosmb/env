@@ -53,15 +53,19 @@ def match_con_frase(frase_original, lista_conceptos_encontrados):
 		buscar = words[-1]+" "
 		print("buscar", buscar)
 		if frase_original.rfind((words[-1]+" ").lower()) != -1:
+			frase_original = frase_original.replace((words[-1]+" "), (("→"+words[-1]+" ")))
 			indice_final_frase = frase_original.rfind((words[-1]+" ").lower())+len(words[-1])
 			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
 		elif frase_original.rfind((words[-1]+",").lower()) != -1:
+			frase_original = frase_original.replace((words[-1]+","), (("→"+words[-1]+",")))
 			indice_final_frase = frase_original.rfind((words[-1]+",").lower())+len(words[-1])
 			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
 		elif frase_original.rfind((words[-1]+".").lower()) != -1:
+			frase_original = frase_original.replace((words[-1]+"."), (("→"+words[-1]+".")))
 			indice_final_frase = frase_original.rfind((words[-1]+".").lower())+len(words[-1])
 			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
 		elif frase_original.rfind((words[-1]+")").lower()) != -1:
+			frase_original = frase_original.replace((words[-1]+")"), (("→"+words[-1]+")")))
 			indice_final_frase = frase_original.rfind((words[-1]+")").lower())+len(words[-1])
 			frase_original = frase_original[:indice_final_frase] + "<<"+i["id"]+">>" +frase_original[indice_final_frase:]
 		#indice_final_frase = frase_original.rfind(words[-1]+" ")+len(words[-1])
@@ -879,10 +883,10 @@ def ProcesarBundleView(request):
 
 			 		lista_unos = [i2 for indx2, i2 in enumerate(status_frases) if i2[2] == 1]
 			 		lista_final = []
-			 		print("lista_unos", lista_unos)
+			 		#print("lista_unos", lista_unos)
 			 		lista_final = Parallel(n_jobs=-1, prefer="threads")(delayed(ProcesarOracion2)(i[1], indx, val, start_time) for indx, i in enumerate(status_frases) if i[2] == 0)
 			 		lista_unida = lista_unos + lista_final
-			 		print("lista_unida", lista_unida)
+			 		#print("lista_unida", lista_unida)
 			 		lista_unida = Sort_0(lista_unida)
 
 			 		for indx3, item in enumerate(lista_unida):
@@ -916,10 +920,12 @@ def ProcesarBundleView(request):
 			 		frase_original = val['resource']['conclusion']
 			 		lista_conceptos_encontrados = val['resource']['extension']
 			 		#print("type(conceptos_entontrados) = ", type(lista_conceptos_encontrados))
+			 		#print("conceptos_entontrados = ", lista_conceptos_encontrados)
 			 		frase_con_ids = match_con_frase(frase_original, lista_conceptos_encontrados)
-			 		print("frase_con_ids", frase_con_ids)
-			 		val['resource'].update( {"conclusion2": fraseFinal} )
-			 		val['resource'].update( {"conclusion3": frase_con_ids} )
+			 		#print("frase_con_ids", frase_con_ids)
+			 		#val['resource'].update( {"conclusion2": fraseFinal} )
+			 		#val['resource'].update( {"conclusion3": frase_con_ids} )
+			 		val['resource'].update( {"conclusion": frase_con_ids} )
 
 			 	print("--- %s seconds Resource DiagnosticReport ---" % (time.time() - start_time))	
 
@@ -1230,10 +1236,10 @@ def ProcesarDiagnosticReportView(request):
 		 		lista_conceptos_encontrados = responseMA['extension']
 		 		#print("type(conceptos_entontrados) = ", type(lista_conceptos_encontrados))
 		 		frase_con_ids = match_con_frase(frase_original, lista_conceptos_encontrados)
-		 		print("frase_con_ids", frase_con_ids)
-		 		responseMA.update( {"conclusion2": fraseFinal} )
-		 		responseMA.update( {"conclusion": frase_original} )
-		 		responseMA.update( {"conclusion3": frase_con_ids} )
+		 		#print("frase_con_ids", frase_con_ids)
+		 		#responseMA.update( {"conclusion2": fraseFinal} )
+		 		responseMA.update( {"conclusion": frase_con_ids} )
+		 		#responseMA.update( {"conclusion3": frase_con_ids} )
 			print("--- %s seconds Resource DiagnosticReport alone ---" % (time.time() - start_time))	
 			return Response(responseMA)
 		else:

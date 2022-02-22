@@ -100,7 +100,7 @@ def Preprocesamiento(la_frase):
 def InicioView(request):
 	#pacientes = Paciente.objects.all()
 	#recurso = 'PruebaPOS'
-	recurso = 'conversion'
+	recurso = 'TokensDiagnosticos'
 
 
 	if recurso == "conversion":#convertir los datos de notas clinicas en recursos bundle
@@ -275,6 +275,13 @@ def InicioView(request):
 					for k in filt_tokens:
 						TokensDiagnosticos.objects.create(token=k.lower(), id_descripcion=j.id, largo_palabras_termino=len(filt_tokens))
 						descAceptadas.append([k.lower(), j.id, len(filt_tokens)])
+			sinonimos = Synonyms.objects.all()
+			for s in sinonimos:
+				tokens2 = [t for t in s.term.split()]
+				filt_tokens2 = [w.lower() for w in tokens2 if not w.lower() in stop_words]
+				for k2 in filt_tokens2:
+					TokensDiagnosticos.objects.create(token=k2.lower(), id_descripcion="s"+str(s.id), largo_palabras_termino=len(filt_tokens2))
+
 
 
 
